@@ -96,6 +96,7 @@ module.exports = function(postgres) {
       // -------------------------------
     },
     async getItems(idToOmit) {
+      try{
       const items = await postgres.query({
         /**
          *  @TODO: Advanced queries
@@ -106,13 +107,19 @@ module.exports = function(postgres) {
          *
          *  Hint: You'll need to use a conditional AND and WHERE clause
          *  to your query text using string interpolation
+         * 
+         * NTS: I have added a borrowerid parameter.  I assumed this filtering feature was for the landing page(?) where you don't want to see your own items or items not available for borrowing
          */
 
-        text: ``,
-        values: idToOmit ? [idToOmit] : []
+        text: `SELECT * FROM items WHERE (ownerid != $1 AND borrowerid IS NULL) OR ($1 IS NULL)`,
+        values: [idToOmit]
       })
+      if (!items) throw 'Items not found'
       return items.rows
-    },
+    } catch(e) {
+      throw 'Items not found.'
+    }
+  },
     async getItemsForUser(id) {
       const items = await postgres.query({
         /**

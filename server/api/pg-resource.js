@@ -121,15 +121,20 @@ module.exports = function(postgres) {
       }
     },
     async getItemsForUser(id) {
-      const items = await postgres.query({
+      try{ 
+        const items = await postgres.query({
         /**
          *  @TODO: Advanced queries
          *  Get all Items. Hint: You'll need to use a LEFT INNER JOIN among others
          */
-        text: ``,
+        text: `SELECT * FROM items WHERE ownerid = $1 `,
         values: [id]
       })
+      if (!items) throw 'Items not found'
       return items.rows
+    } catch (e) {
+      throw 'Items not found.'
+    }
     },
     async getBorrowedItemsForUser(id) {
       const items = await postgres.query({

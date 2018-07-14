@@ -73,7 +73,7 @@ module.exports = function(postgres) {
        */
 
       const findUserQuery = {
-        text: '', // @TODO: Basic queries
+        text: 'SELECT * FROM users WHERE id = $1', // @TODO: Basic queries
         values: [id]
       }
 
@@ -86,8 +86,13 @@ module.exports = function(postgres) {
        *  Customize your throw statements so the message can be used by the client.
        */
 
-      const user = await postgres.query(findUserQuery)
-      return user
+      try {
+        const user = await postgres.query(findUserQuery)
+        if (!user) throw 'User was not found.'
+        return user.rows[0]
+      } catch(e){
+        throw 'User was not found.'
+      }
       // -------------------------------
     },
     async getItems(idToOmit) {

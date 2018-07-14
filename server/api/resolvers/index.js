@@ -61,9 +61,13 @@ module.exports = function(app) {
         }
         // -------------------------------
       },
-      async tags() {
-        // @TODO: Replace this mock return statement with the correct tags from Postgres
-        return []
+      async tags(parents, args, { pgResource }, info) {
+        try {
+          const tags = await pgResource.getTags()
+          return tags
+        } catch (e) {
+          throw new ApolloError(e)
+        }
         // -------------------------------
       }
     },

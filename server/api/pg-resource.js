@@ -90,36 +90,36 @@ module.exports = function(postgres) {
         const user = await postgres.query(findUserQuery)
         if (!user) throw 'User was not found.'
         return user.rows[0]
-      } catch(e){
+      } catch (e) {
         throw 'User was not found.'
       }
       // -------------------------------
     },
     async getItems(idToOmit) {
-      try{
-      const items = await postgres.query({
-        /**
-         *  @TODO: Advanced queries
-         *
-         *  Get all Items. If the idToOmit parameter has a value,
-         *  the query should only return Items were the ownerid column
-         *  does not contain the 'idToOmit'
-         *
-         *  Hint: You'll need to use a conditional AND and WHERE clause
-         *  to your query text using string interpolation
-         * 
-         * NTS: I have added a borrowerid parameter.  I assumed this filtering feature was for the landing page(?) where you don't want to see your own items or items not available for borrowing
-         */
+      try {
+        const items = await postgres.query({
+          /**
+           *  @TODO: Advanced queries
+           *
+           *  Get all Items. If the idToOmit parameter has a value,
+           *  the query should only return Items were the ownerid column
+           *  does not contain the 'idToOmit'
+           *
+           *  Hint: You'll need to use a conditional AND and WHERE clause
+           *  to your query text using string interpolation
+           *
+           * NTS: I have added a borrowerid parameter.  I assumed this filtering feature was for the landing page(?) where you don't want to see your own items or items not available for borrowing
+           */
 
-        text: `SELECT * FROM items WHERE (ownerid != $1 AND borrowerid IS NULL) OR ($1 IS NULL)`,
-        values: [idToOmit]
-      })
-      if (!items) throw 'Items not found'
-      return items.rows
-    } catch(e) {
-      throw 'Items not found.'
-    }
-  },
+          text: `SELECT * FROM items WHERE (ownerid != $1 AND borrowerid IS NULL) OR ($1 IS NULL)`,
+          values: [idToOmit]
+        })
+        if (!items) throw 'Items not found'
+        return items.rows
+      } catch (e) {
+        throw 'Items not found.'
+      }
+    },
     async getItemsForUser(id) {
       const items = await postgres.query({
         /**
@@ -143,8 +143,15 @@ module.exports = function(postgres) {
       return items.rows
     },
     async getTags() {
-      const tags = await postgres.query(/* @TODO: Basic queries */)
-      return tags.rows
+      try {
+        const tags = await postgres.query({
+          text: `SELECT * FROM tags`
+        })
+        if (!tags) throw 'Tags not found.'
+        return tags.rows
+      } catch (e) {
+        throw 'Tags not found.'
+      }
     },
     async getTagsForItem(id) {
       const tagsQuery = {

@@ -18,8 +18,10 @@ module.exports = function({ app, pgResource }) {
    * https://www.apollographql.com/docs/apollo-server/v2/api/graphql-tools.html#makeExecutableSchema
    */
 
-  // @TODO: Refactor to use 'makeExecutableSchema' to wire up your schema to your resolvers:
-  const schema = undefined
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers
+  })
   // -------------------------------
 
   const apolloServer = new ApolloServer({
@@ -30,6 +32,7 @@ module.exports = function({ app, pgResource }) {
       // -------------------------------
 
       return {
+        pgResource
         /**
          * @TODO: Provide Apollo context
          *

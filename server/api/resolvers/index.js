@@ -73,7 +73,7 @@ module.exports = function(app) {
     },
 
     User: {
-      async items({ id }, args , { pgResource }, info) {
+      async items({ id }, args, { pgResource }, info) {
         try {
           const itemsForUser = await pgResource.getItemsForUser(id)
           return itemsForUser
@@ -83,10 +83,12 @@ module.exports = function(app) {
         // -------------------------------
       },
       async borrowed(parent, args, { pgResource }, info) {
-        try{
-          const itemsBorrowedByUser = await pgResource.getBorrowedItemsForUser(parent.id)
+        try {
+          const itemsBorrowedByUser = await pgResource.getBorrowedItemsForUser(
+            parent.id
+          )
           return itemsBorrowedByUser
-        } catch(e){
+        } catch (e) {
           throw new ApolloError(e)
         }
         // -------------------------------
@@ -95,49 +97,39 @@ module.exports = function(app) {
     },
 
     Item: {
-      /**
-       *  @TODO: Advanced resolvers
-       *
-       *  The Item GraphQL type has two fields that are not present in the
-       *  Items table in Postgres: itemowner, tags and borrower.
-       *
-       * According to our GraphQL schema, the itemowner and borrower should return
-       * a User (GraphQL type) and tags should return a list of Tags (GraphQL type)
-       *
-       */
-      // @TODO: Uncomment these lines after you define the Item type with these fields
-      async itemowner(parent, id,{ pgResource }, info) {
+      async itemowner(parent, id, { pgResource }, info) {
         //NTS: Eventually this query should limit the password column like example below
         try {
-        const itemOwner = await pgResource.getUserById(parent.ownerid)
-        return itemOwner
-      } catch (e) {
-        throw new ApolloError(e)
-      }
-      // return {
-      //     id: 29,
-      //     fullname: "Mock user",
-      //     email: "mock@user.com",
-      //     bio: "Mock user. Remove me."
-      //   }
-      //   // -------------------------------
-      },
-      async tags(parent, args, { pgResource }, info) {
-        try{
-          const tagsForItem = await pgResource.getTagsForItem(parent.id)
-          return tagsForItem
-        } catch(e){
+          const itemOwner = await pgResource.getUserById(parent.ownerid)
+          return itemOwner
+        } catch (e) {
           throw new ApolloError(e)
         }
-        },
-      // async borrower() {
-      //   /**
-      //    * @TODO: Replace this mock return statement with the correct user from Postgres
-      //    * or null in the case where the item has not been borrowed.
-      //    */
-      //   return null
-      //   // -------------------------------
-      // },
+        // return {
+        //     id: 29,
+        //     fullname: "Mock user",
+        //     email: "mock@user.com",
+        //     bio: "Mock user. Remove me."
+        //   }
+        //   // -------------------------------
+      },
+      async tags(parent, args, { pgResource }, info) {
+        try {
+          const tagsForItem = await pgResource.getTagsForItem(parent.id)
+          return tagsForItem
+        } catch (e) {
+          throw new ApolloError(e)
+        }
+      },
+      async borrower(parent, args, { pgResource }, info) {
+        try {
+          const borrower = await pgResource.getUserById(parent.borrowerid)
+          return borrower
+        } catch (e) {
+          throw new ApolloError(e)
+        }
+        // -------------------------------
+      }
       // async imageurl({ imageurl, imageid, mimetype, data }) {
       //   if (imageurl) return imageurl
       //   if (imageid) {

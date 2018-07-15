@@ -121,20 +121,20 @@ module.exports = function(postgres) {
       }
     },
     async getItemsForUser(id) {
-      try{ 
+      try {
         const items = await postgres.query({
-        /**
-         *  @TODO: Advanced queries
-         *  Get all Items. Hint: You'll need to use a LEFT INNER JOIN among others
-         */
-        text: `SELECT * FROM items WHERE ownerid = $1 `,
-        values: [id]
-      })
-      if (!items) throw 'Items not found'
-      return items.rows
-    } catch (e) {
-      throw 'Items not found.'
-    }
+          /**
+           *  @TODO: Advanced queries
+           *  Get all Items. Hint: You'll need to use a LEFT INNER JOIN among others
+           */
+          text: `SELECT * FROM items WHERE ownerid = $1 `,
+          values: [id]
+        })
+        if (!items) throw 'Items not found'
+        return items.rows
+      } catch (e) {
+        throw 'Items not found.'
+      }
     },
     async getBorrowedItemsForUser(id) {
       try {
@@ -170,10 +170,10 @@ module.exports = function(postgres) {
         FROM items item
         JOIN itemtags itemtag ON item.id=itemtag.itemid
         JOIN tags tag ON itemtag.tagid=tag.id
-        WHERE item.id= $1;`, 
+        WHERE item.id= $1;`,
         values: [id]
       }
-      try{
+      try {
         const tags = await postgres.query(tagsQuery)
         if (!tags) throw 'Tags not found.'
         return tags.rows

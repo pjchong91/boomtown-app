@@ -137,15 +137,20 @@ module.exports = function(postgres) {
     }
     },
     async getBorrowedItemsForUser(id) {
-      const items = await postgres.query({
-        /**
-         *  @TODO: Advanced queries
-         *  Get all Items. Hint: You'll need to use a LEFT INNER JOIN among others
-         */
-        text: ``,
-        values: [id]
-      })
-      return items.rows
+      try {
+        const items = await postgres.query({
+          /**
+           *  @TODO: Advanced queries
+           *  Get all Items. Hint: You'll need to use a LEFT INNER JOIN among others
+           */
+          text: `SELECT * FROM items WHERE borrowerid = $1`,
+          values: [id]
+        })
+        if (!items) throw 'Items not found.'
+        return items.rows
+      } catch (e) {
+        throw 'Items not found.'
+      }
     },
     async getTags() {
       try {

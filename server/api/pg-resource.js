@@ -165,12 +165,21 @@ module.exports = function(postgres) {
     },
     async getTagsForItem(id) {
       const tagsQuery = {
-        text: ``, // @TODO: Advanced queries
+        text: `
+        SELECT tag.id as id, tag.title as title
+        FROM items item
+        JOIN itemtags itemtag ON item.id=itemtag.itemid
+        JOIN tags tag ON itemtag.tagid=tag.id
+        WHERE item.id= $1;`, 
         values: [id]
       }
-
-      const tags = await postgres.query(tagsQuery)
-      return tags.rows
+      try{
+        const tags = await postgres.query(tagsQuery)
+        if (!tags) throw 'Tags not found.'
+        return tags.rows
+      } catch (e) {
+        throw 'Tags not found.'
+      }
     },
     async saveNewItem({ item, image, user }) {
       /**

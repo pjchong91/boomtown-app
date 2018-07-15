@@ -122,11 +122,14 @@ module.exports = function(app) {
       //   }
       //   // -------------------------------
       },
-      // async tags() {
-      //   // @TODO: Replace this mock return statement with the correct tags for the queried Item from Postgres
-      //   return []
-      //   // -------------------------------
-      // },
+      async tags(parent, args, { pgResource }, info) {
+        try{
+          const tagsForItem = await pgResource.getTagsForItem(parent.id)
+          return tagsForItem
+        } catch(e){
+          throw new ApolloError(e)
+        }
+        },
       // async borrower() {
       //   /**
       //    * @TODO: Replace this mock return statement with the correct user from Postgres

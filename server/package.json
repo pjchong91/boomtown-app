@@ -9,7 +9,7 @@
     "start:dev": "NODE_ENV=development nodemon main.js "
   },
   "keywords": [],
-  "author": "",
+  "author": "P Chong - WDP Student @ RED 2018 Q3",
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^2.0.0-rc.0",

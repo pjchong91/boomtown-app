@@ -8,10 +8,32 @@ import Typography from '@material-ui/core/Typography'
 import AccountForm from '../../components/AccountForm'
 
 import styles from './styles'
+import gql from "graphql-tag";
+import { Query } from "react-apollo";
+import { ITEM_QUERY } from '../../apollo/queries';
+
+
+const GEt_query = gql`
+  query {
+    user(id: 6) {
+      id
+      fullname
+    }
+  }
+`;
+
 
 const Home = ({ classes }) => {
   return (
-    <Grid
+
+    <Query query={ITEM_QUERY} variables={{"id": 6}}>
+    {({ loading, error, data }) => {
+      if (loading) return "Loading...";
+      if (error) return `Error! ${error.message}`;
+
+      return (
+        console.log(data),
+        <Grid
       container
       className={classes.root}
       direction="row"
@@ -37,6 +59,9 @@ const Home = ({ classes }) => {
         <AccountForm />
       </Grid>
     </Grid>
+      );
+    }}
+  </Query>
   )
 }
 

@@ -22,15 +22,9 @@ postgres.on('error', (err, client) => {
 const server = app.listen(PORT, () => {
   console.log(`>>\x1b[34m Express running:\x1b[0m http://localhost:${PORT}`)
 
-  /**
-   *  @TODO: Initialize Apollo Server
-   *
-   *   Uncomment the following lines when you're ready to start Apollo:
-   *
-   *   console.log(
-   *     `>>\x1b[35m Graphql playground:\x1b[0m http://localhost:${PORT}/graphql`
-   *   )
-   */
+  console.log(
+    `>>\x1b[35m Graphql playground:\x1b[0m http://localhost:${PORT}/graphql`
+  )
 })
 
 server.on('error', err => {

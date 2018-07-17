@@ -8,6 +8,7 @@ const Items = ({ classes }) => {
     <div>
       <p>
         This is the items page located at <code>/items</code>.
+        
       </p>
     </div>
   )

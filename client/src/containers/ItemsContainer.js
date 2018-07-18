@@ -11,7 +11,7 @@ import {
   ALL_ITEMS_QUERY,
   ALL_USER_ITEMS_QUERY,
   ADD_ITEM_MUTATION
-} from '../ApolloClient/queries'
+} from '../apollo/queries'
 
 const itemsData = ({ render }) => {
   /**
@@ -23,16 +23,14 @@ const itemsData = ({ render }) => {
    * currently logged-in user once you have added authentication.
    */
 
-  <Query query={ALL_ITEMS_QUERY} variables={{"id": 6}}>
-  {({ loading, error, data }) => {
-    if (loading) return "Loading...";
-    if (error) return `Error! ${error.message}`;
-    return (
-      console.log(data)
-    );
-  }}
-</Query>
-  // return undefined
+  return (
+    <Query query={ALL_ITEMS_QUERY} 
+    variables={{ "filter": null }}
+    >
+    {({loading, error, data:{items}}) => render ({loading, error, items})}
+     
+    </Query>
+  )
 }
 
 const userItemsData = ({ userId, render }) => {
@@ -42,14 +40,24 @@ const userItemsData = ({ userId, render }) => {
    * Note: Your query will need to retrieve only items that belong to a
    * specific user id.
    */
-  return undefined
+  return (
+    <Query query={ALL_USER_ITEMS_QUERY} variables={{ "id": 6 }}>
+        {({loading, error, data:{users}}) => render ({loading, error, users})}
+
+  </Query>
+  )
 }
 
 const tagData = ({ render }) => {
   /**
    * @TODO: Use Apollo's <Query /> component to fetch all the tags.
    */
-  return undefined
+  return (
+    <Query query={ALL_TAGS_QUERY} >
+          {({loading, error, data:{tags}}) => render ({loading, error, tags})}
+
+    </Query>
+  )
 }
 
 const addItem = ({ render }) => {
@@ -63,9 +71,9 @@ const addItem = ({ render }) => {
 }
 const ItemsContainer = adopt({
   // @TODO: Uncomment each line as you write the corresponding query.
-  // tagData,
-  // itemsData,
-  // userItemsData,
+  tagData,
+  itemsData,
+  userItemsData,
   // addItem
   // -------------------------------
 })

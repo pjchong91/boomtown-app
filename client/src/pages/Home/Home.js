@@ -13,26 +13,26 @@ import { Query } from "react-apollo";
 import { ITEM_QUERY, ALL_ITEMS_QUERY, ALL_USER_ITEMS_QUERY, ALL_TAGS_QUERY } from '../../apollo/queries';
 
 
-const GEt_query = gql`
-  query {
-    user(id: 6) {
-      id
-      fullname
-    }
-  }
-`;
+// const GEt_query = gql`
+//   query {
+//     user(id: 6) {
+//       id
+//       fullname
+//     }
+//   }
+// `;
 
 
 const Home = ({ classes }) => {
   return (
 
-    <Query query={ALL_TAGS_QUERY}>
-    {({ loading, error, data }) => {
-      if (loading) return "Loading...";
-      if (error) return `Error! ${error.message}`;
+    // <Query query={ALL_TAGS_QUERY}>
+    // {({ loading, error, data }) => {
+    //   if (loading) return "Loading...";
+    //   if (error) return `Error! ${error.message}`;
 
-      return (
-        console.log(data),
+    //   return (
+    //     console.log(data),
         <Grid
       container
       className={classes.root}
@@ -59,9 +59,9 @@ const Home = ({ classes }) => {
         <AccountForm />
       </Grid>
     </Grid>
-      );
-    }}
-  </Query>
+    //   );
+    // }}
+  // </Query>
   )
 }
 

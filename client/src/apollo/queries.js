@@ -11,16 +11,16 @@ const ItemFields = gql`
     imageurl
     description
     created
-    tags{
+    tags {
       id
       title
     }
-    itemowner{
+    itemowner {
       id
       fullname
       email
       bio
-    } 
+    }
     borrower {
       id
       fullname
@@ -32,30 +32,47 @@ const ItemFields = gql`
     # https://www.apollographql.com/docs/angular/features/fragments.html
   }
 `
+//This query is showing ALL items
 export const ITEM_QUERY = gql`
-  query items($id: ID!) {
-    items (filter: $id){
+  query {
+    items {
       # @TODO: Query an item by its id and return the ItemFields fragment.
-        ...ItemFields
-    }  
+      ...ItemFields
+    }
+  }
+  ${ItemFields}
+`
+// This query shows items not owned by filtered id and not currently borrowed
+export const ALL_ITEMS_QUERY = gql`
+  query items($id: ID) {
+    items(filter: $id) {
+      # @TODO: Query items (optionally by tag id) and return the ItemFields fragment.
+      ...ItemFields
+    }
   }
   ${ItemFields}
 `
 
-// export const ALL_ITEMS_QUERY = gql`
-//   query items($filter: ID) {
-//     # @TODO: Query items (optionally by tag id) and return the ItemFields fragment.
-//   }
-//   ${ItemFields}
-// `
-
-// export const ALL_USER_ITEMS_QUERY = gql`
-//   query user($id: ID!) {
-//     # @TODO: Query the bio, email, fullname, items, and borrowed for the user by id
-//     # Use the ItemFields fragment for the items and borrowed fields.
-//   }
-//   ${ItemFields}
-// `
+export const ALL_USER_ITEMS_QUERY = gql`
+  query($id: ID!) {
+    user(id: $id) {
+      fullname
+      email
+      bio
+      items {
+        ...ItemFields
+      }
+      borrowed {
+        ...ItemFields
+      }
+    }
+  }
+  # query user($id: ID!) {
+  # @TODO: Query the bio, email, fullname, items, and borrowed for the user by id
+  # Use the ItemFields fragment for the items and borrowed fields.
+  #}
+  ${ItemFields}
+`
 
 // export const ALL_TAGS_QUERY = gql`
 //   query {

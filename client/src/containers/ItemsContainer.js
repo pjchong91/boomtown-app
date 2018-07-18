@@ -22,7 +22,17 @@ const itemsData = ({ render }) => {
    * The final query will ultimately filter out items that belong to the
    * currently logged-in user once you have added authentication.
    */
-  return undefined
+
+  <Query query={ALL_ITEMS_QUERY} variables={{"id": 6}}>
+  {({ loading, error, data }) => {
+    if (loading) return "Loading...";
+    if (error) return `Error! ${error.message}`;
+    return (
+      console.log(data)
+    );
+  }}
+</Query>
+  // return undefined
 }
 
 const userItemsData = ({ userId, render }) => {

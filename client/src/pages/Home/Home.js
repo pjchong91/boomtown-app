@@ -10,7 +10,7 @@ import AccountForm from '../../components/AccountForm'
 import styles from './styles'
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
-import { ITEM_QUERY } from '../../apollo/queries';
+import { ITEM_QUERY, ALL_ITEMS_QUERY, ALL_USER_ITEMS_QUERY } from '../../apollo/queries';
 
 
 const GEt_query = gql`
@@ -26,7 +26,7 @@ const GEt_query = gql`
 const Home = ({ classes }) => {
   return (
 
-    <Query query={ITEM_QUERY} variables={{"id": 6}}>
+    <Query query={ALL_USER_ITEMS_QUERY} variables={{"id":7}}>
     {({ loading, error, data }) => {
       if (loading) return "Loading...";
       if (error) return `Error! ${error.message}`;

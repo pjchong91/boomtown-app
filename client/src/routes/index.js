@@ -28,6 +28,7 @@ export default () => (
       <Route exact path="/profile" component={Profile} />
 
       <Route exact path="/profile/:id" component={Profile} />
+
       <Redirect from="/" exact to="/welcome" component={Home} />
       <Redirect to="/items" component={Items} />
     </Switch>

@@ -1,11 +1,14 @@
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core'
 import React from 'react'
 import styles from './styles'
 import ItemsContainer from './../../containers/ItemsContainer'
+import ItemCard from './../../components/ItemCard'
+
+//------- MATERIAL UI IMPORT??
 
 const Items = ({ classes }) => {
   return (
-<div>
+    <div>
       <ItemsContainer>
         {({ itemsData: { items, loading, error } }) => {
           if (loading) {
@@ -14,26 +17,14 @@ const Items = ({ classes }) => {
           if (error) {
             return error
           }
-          return items.map(item => <li>{item.title}</li>)
+          
+          return items.map(item => (
+           <ItemCard item={item}/>
+          ))
         }}
-      </ItemsContainer> 
-
-
-           <ItemsContainer>
-           {({ tagData: { tags, loading, error } }) => {
-             if (loading) {
-               return 'Content Loading...'
-             }
-             if (error) {
-               return error
-             }
-             return tags.map(tag => <p>{tag.title}</p>)
-           }}
-         </ItemsContainer> 
-         </div>
+      </ItemsContainer>
+    </div>
   )
 }
 
 export default withStyles(styles)(Items)
-
-

@@ -7,6 +7,10 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import { Link } from 'react-router-dom';
+import BoomtownLogo from './../../images/boomtown.svg'
+import ShareButton from './ShareButton/ShareButton'
+import HamburgerMenu from './UserMenu/Hamburger'
 
 const styles = {
   root: {
@@ -23,21 +27,27 @@ const styles = {
 
 function ButtonAppBar(props) {
   const { classes } = props;
-  return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="title" color="inherit" className={classes.flex}>
-            News
-          </Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+  console.log(window.location.pathname)
+   
+    return (
+      <div className={classes.root}>
+        <AppBar position="static">
+          <Toolbar>
+              <Link to="./items">
+                  <img src={BoomtownLogo} alt='Boomtown Logo'/>
+              </Link>
+           
+            <Link to="./share">
+            <ShareButton />
+            </Link>
+            <HamburgerMenu />
+          </Toolbar>
+         
+        </AppBar>
+      </div>
+    );
+  
+  
 }
 
 ButtonAppBar.propTypes = {

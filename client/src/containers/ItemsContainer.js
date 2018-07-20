@@ -25,7 +25,7 @@ const itemsData = ({ render }) => {
 
   return (
     <Query query={ALL_ITEMS_QUERY} 
-    variables={{ "filter": null }}
+    variables={{ id: 6 }}
     >
     {({loading, error, data:{items}}) => render ({loading, error, items})}
      

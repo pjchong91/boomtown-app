@@ -23,6 +23,16 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
+  navBar:{
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'space-between'
+  },
+  rightSideNav:{
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  }
 };
 
 function ButtonAppBar(props) {
@@ -32,15 +42,16 @@ function ButtonAppBar(props) {
     return (
       <div className={classes.root}>
         <AppBar position="static">
-          <Toolbar>
+          <Toolbar className={classes.navBar}>
               <Link to="./items">
-                  <img src={BoomtownLogo} alt='Boomtown Logo'/>
+                  <img src={BoomtownLogo} alt='Boomtown Logo' style={{display:"inline", maxHeight:"50px", margin:"10px"}}/>
               </Link>
-           
+           <div className={classes.rightSideNav}>
             <Link to="./share">
             <ShareButton />
             </Link>
             <HamburgerMenu />
+        </div>
           </Toolbar>
          
         </AppBar>

@@ -46,7 +46,7 @@ class ShareForm extends Component {
     const { classes } = this.props
 
     return (
-      <div>
+      <div className={classes.root}>
         <Typography className={classes.header}>
           Share. Borrow. Prosper.
         </Typography>

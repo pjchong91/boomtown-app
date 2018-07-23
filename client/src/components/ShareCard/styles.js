@@ -3,9 +3,11 @@ const styles = theme => ({
         display: 'none',
         [theme.breakpoints.up('sm')]:{
             width: '50%',
-            height: '50%',
+            height: '100%',
                         display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            margin: '50px 10px'
         }
         
       },

@@ -24,8 +24,15 @@ const styles = theme => ({
     root:{
         [theme.breakpoints.up('sm')]:{
             width: '50%',
-            height: '50%'
+            height: '100%',
+            margin: '50px 10px'
         }
+    },
+    tag:{
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center'
     }
     
 

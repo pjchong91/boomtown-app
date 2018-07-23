@@ -4,26 +4,17 @@ const styles = theme => ({
       fontSize: '40px',
       fontWeight: '700'
     },
-    formButton: {
-      marginTop: theme.spacing.unit * 2
+    selectImageButton:{
+        backgroundColor: theme.palette.primary.main,
+        width: '100%'
     },
-    formToggle: {
-      background: 'none',
-      border: 'none',
-      textDecoration: 'underline',
-      '&:hover': {
-        cursor: 'pointer'
-      }
+    inputName: {
+        width: '100%'
     },
-    accountForm: {
-      width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        width: '400px'
-      }
-    },
-    errorMessage: {
-      color: 'firebrick'
+    inputDescription:{
+        width: '100%'
     }
+
   })
   
 

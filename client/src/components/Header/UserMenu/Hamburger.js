@@ -43,6 +43,7 @@ class LongMenu extends React.Component {
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
+          disableAutoFocusItem={true}
           PaperProps={{
             style: {
               maxHeight: ITEM_HEIGHT * 4.5,
@@ -51,7 +52,7 @@ class LongMenu extends React.Component {
           }}
         >
         <Link to="./profile">
-        <MenuItem key='Your Profile' onClick={this.handleClose}>Your Profile</MenuItem>
+        <MenuItem key='Your Profile'  onClick={this.handleClose} >Your Profile</MenuItem>
         </Link>
 
         <Link to="./welcome">

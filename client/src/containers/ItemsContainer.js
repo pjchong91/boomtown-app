@@ -25,7 +25,7 @@ const itemsData = ({ render }) => {
 
   return (
     <Query query={ALL_ITEMS_QUERY} 
-    variables={{ id: 6 }}
+    variables={{ id: null }}
     >
     {({loading, error, data:{items}}) => render ({loading, error, items})}
      
@@ -54,13 +54,13 @@ const tagData = ({ render }) => {
   /**
    * @TODO: Use Apollo's <Query /> component to fetch all the tags.
    */
-  // return (
-  //   <Query query={ALL_TAGS_QUERY} >
-  //         {({loading, error, data:{tags}}) => render ({loading, error, tags})}
+  return (
+    <Query query={ALL_TAGS_QUERY} >
+          {({loading, error, data:{tags}}) => render ({loading, error, tags})}
 
-  //   </Query>
-  // )
-  return undefined
+    </Query>
+  )
+  // return undefined
 }
 
 const addItem = ({ render }) => {
@@ -74,7 +74,7 @@ const addItem = ({ render }) => {
 }
 const ItemsContainer = adopt({
   // @TODO: Uncomment each line as you write the corresponding query.
-  // tagData,
+  tagData,
   itemsData,
   // userItemsData,
   // addItem

@@ -1,6 +1,6 @@
 # ADP Project 1: Boomtown
 
-- Author: P. Chong, ADP Student 2018 Q3
+- Author: P. Chong, ADP Student @ RED Academy 2018 Q3
 
 ## Description and Objective:
 
@@ -9,11 +9,14 @@
 
 ## Using:
 
-- For server side
-
-  - PostgresQL, Apollo-Express, GraphQL
-
-- For client side
+- Backend
+  - PostgresQL
+  - Node.Js
+  - Express
+  - Apollo
+  - GraphQL
+  
+- Frontend
   - React
 
 ## Questions Encountered and Learning Acquired:
@@ -26,7 +29,7 @@
   - Prior to GraphQL, developers relied largely on RESTful queries. This could result in overfetching of data or underfetching ( in which case, multiple queries would have to be made... eventually leading to overfetching). GraphQL is the query language we used and it creates one endpoint such that we can tailor a query to get exactly what we want. Except(!) that the appropriate schema must be written first. A schema is a contract between the server and the client, which defines types and fields - so for example, the schema says we may ask for a type User, who has fields: fullname, bio, and email. Without these fields, we would not be able to query for them.
 
 ## Set Up
-
+1. Make a postgres database.... 
 ### Server
 
 - Commands must be run from the `server` directory:

@@ -33,6 +33,9 @@ const styles = theme => ({
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center'
+    },
+    root:{
+        maxWidth: '420px'
     }
     
 

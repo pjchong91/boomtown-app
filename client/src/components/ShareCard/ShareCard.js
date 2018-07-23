@@ -16,6 +16,7 @@ import styles from './styles'
 const ShareCard = ({ classes}) => (
   <Card className={classes.card}>
     <CardMedia className={classes.media} />
+    <div className={classes.textContent}>
     <CardHeader
       avatar={
         <Avatar aria-label="Recipe" className={classes.avatar}>
@@ -42,6 +43,7 @@ const ShareCard = ({ classes}) => (
         Borrow
       </Button>
     </CardActions>
+    </div>
   </Card>
 )
 

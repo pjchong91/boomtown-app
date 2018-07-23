@@ -3,11 +3,15 @@ const styles = theme => ({
         display: 'none',
         [theme.breakpoints.up('sm')]:{
             width: '50%',
-            height: '100%',
+            maxWidth: '420px',
+            // height: '100%',
                         display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between',
+            // justifyContent: 'space-between',
             margin: '50px 10px'
+        },
+        [theme.breakpoints.up('md')]:{
+            // height: '100%'
         }
         
       },
@@ -24,6 +28,12 @@ const styles = theme => ({
       },
       tagsText:{
           color: 'rgba(0, 0, 0, 0.54)'
+      },
+      textContent:{
+          display: 'flex',
+          flexDirection:'column',
+          justifyContent:'space-between',
+          height: '100%'
       }
 })
 

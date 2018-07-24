@@ -2,9 +2,16 @@ import React, { Component } from 'react'
 import { Form, Field } from 'react-final-form'
 import TextField from './TextField/TextField'
 import TagMenu from './TagMenu/TagMenu'
-import { Typography, Button, Checkbox, MenuItem, ListItemText, Grid } from '@material-ui/core'
+import {
+  Typography,
+  Button,
+  MenuItem,
+  ListItemText,
+  Grid
+} from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import ItemContainer from './../../containers/ItemsContainer'
+import Checkbox from './../Checkbox/Checkbox'
 import styles from './styles'
 // import Button from '@material-ui/core/Button';
 
@@ -25,9 +32,17 @@ class ShareForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      disabled: true
+      disabled: true,
+      tags:[]
     }
   }
+
+  handleChange = event => {
+    // this.setState({ name: event.target.value });
+    // console.log(itemTags)
+  };
+
+  
 
   validate = values => {
     const errors = {}
@@ -36,6 +51,9 @@ class ShareForm extends Component {
     }
     if (!values.itemDescription) {
       errors.itemDescription = 'Required'
+    }
+    if (!values.itemTags){
+      errors.itemTags
     }
 
     console.log(values)
@@ -84,50 +102,60 @@ class ShareForm extends Component {
                 />
               </div>
 
-              
-             
-
               {/* <TagMenu /> */}
 
-<Typography>Tags (pick at least one!)</Typography>
-<Grid container>
-              <ItemContainer>
-                {({ tagData: { tags, loading, error } }) => {
-                  if (loading) {
-                    return <p>Content Loading...</p>
-                  }
-                  if (error) {
-                    return error
-                  }
+              <Typography>Tags (pick at least one!)</Typography>
+              <Grid container>
+                <ItemContainer>
+                  {({ tagData: { tags, loading, error } }) => {
+                    if (loading) {
+                      return <p>Content Loading...</p>
+                    }
+                    if (error) {
+                      return error
+                    }
 
-                  return tags.map(tag => (
-<Grid item xs={6}>
-                    <label className = {classes.tag}>
-                                        
+                    return tags.map(tag => (
+                      <Grid item xs={6}>
+                       {/* <label className={classes.tag} value={tag.title}>
+                          <Field
+                            name="itemTags"
+                            component={Checkbox}
+                            // type="checkbox"
+                            value={tag.title}
+                            // value={'hello jane'}
+                            // label={tag.title}
+                            onChange={this.handleChange}
+                          />
 
-                    <Field
-                      name="tags"
-                      component={Checkbox}
-                      type="checkbox"
-                      value={tag.title}
-                      label={tag.title}
-                      >
-                  {' '}
-                    </Field>
-                    <ListItemText primary={tag.title}/>
-                   
-        
-                  </label>
-                  </Grid>
-                    // <MenuItem key={tag.title} value={tag.title}>
-                    //   <Checkbox
-                    //     checked={this.state.name.indexOf(tag.title) > -1}
-                    //   />
-                    //   <ListItemText primary={tag.title} />
-                    // </MenuItem>
-                  ))
-                }}
-              </ItemContainer>
+    
+                            {' '}
+                      
+                       <ListItemText primary={tag.title} />
+                        
+                      {/* </Field> */}
+                     
+{/* </label>                     */}
+
+<label className={classes.tag}>
+                <Field
+                  name="itemTags"
+                  component={Checkbox}
+                  type="checkbox"
+                  value={tag.title}
+                />{' '}
+                <ListItemText primary={tag.title}/>
+              </label>
+                      </Grid>
+                      // <MenuItem key={tag.title} value={tag.title}>
+                      //   <Checkbox
+                      //     checked={this.state.name.indexOf(tag.title) > -1}
+                      //   />
+                      //   <ListItemText primary={tag.title} />
+                      // </MenuItem>
+                    ))
+                  }}
+                </ItemContainer>
               </Grid>
 
               <Button

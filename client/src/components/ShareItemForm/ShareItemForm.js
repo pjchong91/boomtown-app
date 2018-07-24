@@ -40,7 +40,10 @@ class ShareForm extends Component {
     super(props)
     this.state = {
       disabled: true,
-      tags: []
+      tags: [],
+      fileSelected: false,
+      selectedTags: [],
+      submitted: false
     }
   }
 
@@ -69,13 +72,64 @@ class ShareForm extends Component {
     return errors
   }
 
+  //WOT iS THIS SUPPOSED TO BE??? 
+  dispatchUpdate(values, tags, updateNewItem) {
+    if (!values.imageurl && this.state.fileSelected) {
+      this.getBase64Url().then(imageurl => {
+        updateNewItem({
+          imageurl
+        })
+      })
+    }
+
+    updateNewItem({
+      ...values,
+      tags: this.applyTags(tags)
+    })
+  }
+
+  //converts an image to base64 string 
+  getBase64Url() {
+    return new Promise(resolve => {
+      const reader = new FileReader()
+      reader.onload = e => {
+        resolve(
+          `data:${this.state.fileSelected.mimeType};base64, ${btoa(
+            e.target.result
+          )}`
+        )
+      }
+      reader.readAsBinaryString(this.state.fileSelected)
+    })
+  }
+
+  applyTags(tags) {
+    return (
+      tags &&
+      tags
+        .filter(t => this.state.selectedTags.indexOf(t.id) > -1)
+        .map(t => ({ title: t.title, id: t.id }))
+    )
+  }
   
 
   render() {
     const { classes } = this.props
     const {resetImage, updateNewItem, resetNewItem} = this.props
 
+    
+
     return (
+      <ItemContainer>
+                  {({ tagData: { tags, loading, error } }) => {
+                    if (loading) {
+                      return <p>Content Loading...</p>
+                    }
+                    if (error) {
+                      return error
+                    }
+
+                    return (
       <div className={classes.root}>
         <Typography className={classes.header}>
           Share. Borrow. Prosper.
@@ -127,36 +181,10 @@ class ShareForm extends Component {
 
               <Typography>Tags (pick at least one!)</Typography>
               <Grid container>
-                <ItemContainer>
-                  {({ tagData: { tags, loading, error } }) => {
-                    if (loading) {
-                      return <p>Content Loading...</p>
-                    }
-                    if (error) {
-                      return error
-                    }
-
-                    return tags.map(tag => (
+                
+                    {tags.map(tag => (
                       <Grid item xs={6}>
-                        {/* <label className={classes.tag} value={tag.title}>
-                          <Field
-                            name="itemTags"
-                            component={Checkbox}
-                            // type="checkbox"
-                            value={tag.title}
-                            // value={'hello jane'}
-                            // label={tag.title}
-                            onChange={this.handleChange}
-                          />
-
-    
-                            {' '}
-                      
-                       <ListItemText primary={tag.title} />
                         
-                      {/* </Field> */}
-
-                        {/* </label>                     */}
 
                         <label className={classes.tag}>
                           <Field
@@ -168,15 +196,9 @@ class ShareForm extends Component {
                           <ListItemText primary={tag.title} />
                         </label>
                       </Grid>
-                      // <MenuItem key={tag.title} value={tag.title}>
-                      //   <Checkbox
-                      //     checked={this.state.name.indexOf(tag.title) > -1}
-                      //   />
-                      //   <ListItemText primary={tag.title} />
-                      // </MenuItem>
-                    ))
-                  }}
-                </ItemContainer>
+                      
+                    ))}
+                  
               </Grid>
 
               <Button
@@ -195,7 +217,9 @@ class ShareForm extends Component {
           )}
         />
         <div id="texthere" />
-      </div>
+      </div>)
+    }}
+    </ItemContainer>
     )
   }
 }

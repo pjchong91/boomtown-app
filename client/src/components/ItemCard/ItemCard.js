@@ -15,7 +15,7 @@ import styles from './styles'
 
 const ItemCard = ({ classes, item }) => (
   <Card className={classes.card}>
-    <CardMedia className={classes.media} />
+    <CardMedia className={classes.media} image={item.imageUrl} />
     <CardHeader
       avatar={
         <Avatar aria-label="Recipe" className={classes.avatar}>

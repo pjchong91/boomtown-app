@@ -34,6 +34,7 @@ const Items = ({ classes }) => {
             >
            <ItemCard item={item}
          />
+        
            </Grid>
           ))
         }}

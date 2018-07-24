@@ -26,6 +26,9 @@ const styles = theme => ({
             width: '50%',
             height: '100%',
             margin: '50px 10px'
+        },
+        [theme.breakpoints.up('md')]:{
+            maxWidth: '420px'
         }
     },
     tag:{
@@ -33,9 +36,6 @@ const styles = theme => ({
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center'
-    },
-    root:{
-        maxWidth: '420px'
     }
     
 

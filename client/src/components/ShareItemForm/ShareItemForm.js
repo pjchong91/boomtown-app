@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Field } from 'react-final-form'
+import { FormSpy, Form, Field } from 'react-final-form'
 import TextField from './TextField/TextField'
 import TagMenu from './TagMenu/TagMenu'
 import {
@@ -13,6 +13,13 @@ import { withStyles } from '@material-ui/core/styles'
 import ItemContainer from './../../containers/ItemsContainer'
 import Checkbox from './../Checkbox/Checkbox'
 import styles from './styles'
+import { connect } from 'react-redux'
+import {
+  resetImage,
+  updateNewItem,
+  resetNewItem
+} from './../../redux/modules/shareItemPreview'
+// import FormSpy from 'react-final-form'
 // import Button from '@material-ui/core/Button';
 
 const onSubmit = values => {
@@ -33,16 +40,14 @@ class ShareForm extends Component {
     super(props)
     this.state = {
       disabled: true,
-      tags:[]
+      tags: []
     }
   }
 
   handleChange = event => {
     // this.setState({ name: event.target.value });
     // console.log(itemTags)
-  };
-
-  
+  }
 
   validate = values => {
     const errors = {}
@@ -52,28 +57,44 @@ class ShareForm extends Component {
     if (!values.itemDescription) {
       errors.itemDescription = 'Required'
     }
-    if (!values.itemTags){
-      errors.itemTags
-    }
+    // if (values.itemTags.itemTags.length>0) {
+    //   // errors.itemTags = 'Required - Pick at least one'
+    //   console.log(values.itemTags.itemTags,'hello')
+    // }
+
+    
 
     console.log(values)
 
     return errors
   }
 
+  
+
   render() {
     const { classes } = this.props
+    const {resetImage, updateNewItem, resetNewItem} = this.props
 
     return (
       <div className={classes.root}>
         <Typography className={classes.header}>
           Share. Borrow. Prosper.
         </Typography>
+
         <Form
           onSubmit={onSubmit}
           validate={this.validate}
           render={({ handleSubmit, pristine, invalid }) => (
             <form onSubmit={handleSubmit}>
+              {/* <FormSpy
+                    subscription={{ values: true }}
+                    component={({ values }) => {
+                      if (values) {
+                        this.dispatchUpdate(values, tags, updateNewItem)
+                      }
+                      return ''
+                    }}
+                  /> */}
               <Button variant="contained" className={classes.selectImageButton}>
                 Select an Image
               </Button>
@@ -117,7 +138,7 @@ class ShareForm extends Component {
 
                     return tags.map(tag => (
                       <Grid item xs={6}>
-                       {/* <label className={classes.tag} value={tag.title}>
+                        {/* <label className={classes.tag} value={tag.title}>
                           <Field
                             name="itemTags"
                             component={Checkbox}
@@ -134,18 +155,18 @@ class ShareForm extends Component {
                        <ListItemText primary={tag.title} />
                         
                       {/* </Field> */}
-                     
-{/* </label>                     */}
 
-<label className={classes.tag}>
-                <Field
-                  name="itemTags"
-                  component={Checkbox}
-                  type="checkbox"
-                  value={tag.title}
-                />{' '}
-                <ListItemText primary={tag.title}/>
-              </label>
+                        {/* </label>                     */}
+
+                        <label className={classes.tag}>
+                          <Field
+                            name="itemTags"
+                            component={Checkbox}
+                            type="checkbox"
+                            value={tag.title}
+                          />{' '}
+                          <ListItemText primary={tag.title} />
+                        </label>
                       </Grid>
                       // <MenuItem key={tag.title} value={tag.title}>
                       //   <Checkbox
@@ -179,4 +200,27 @@ class ShareForm extends Component {
   }
 }
 
-export default withStyles(styles)(ShareForm)
+const mapDispatchToProps = dispatch => ({
+  updateNewItem(item) {
+    // Inside this function we can dispatch data to our reducer.
+    dispatch(updateNewItem(item))
+  },
+  resetNewItem() {
+    dispatch(resetNewItem())
+  },
+  resetImage() {
+    dispatch(resetImage())
+  }
+  // ... other methods
+})
+
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(withStyles(styles)(ShareForm))
+// export default connect(
+//   undefined,
+//   mapDispatchToProps
+// )(ShareItemPreview /* Or, withStyles(ShareItemPreview)*/);
+
+// export default withStyles(styles)(ShareForm)

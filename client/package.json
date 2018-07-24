@@ -33,6 +33,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build && rm -rf ../server/public && mv build ../server/public",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev": "webpack-dev-server --mode development ./src/main.js --output ./dist/bundle.js --content-base dist/ --hot"
   }
 }

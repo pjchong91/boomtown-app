@@ -15,6 +15,25 @@ const styles = theme => ({
         padding: '40px 160px'
         
     }
+  },
+  shareCard:{
+    display: "none"
+  },
+  shareCard: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]:{
+        width: '50%',
+        maxWidth: '420px',
+        // height: '100%',
+                    display: 'flex',
+        flexDirection: 'column',
+        // justifyContent: 'space-between',
+        margin: '50px 10px'
+    },
+    [theme.breakpoints.up('md')]:{
+        // height: '100%'
+    }
+    
   }
   })
   

@@ -40,6 +40,9 @@ const styles = theme => ({
     },
     tagSelector:{
         width: '100%'
+    },
+    tagInputLabel:{
+        width: '100%'
     }
     
 

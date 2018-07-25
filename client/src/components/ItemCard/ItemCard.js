@@ -32,7 +32,7 @@ const ItemCard = ({ classes, item }) => (
       </Typography>
 
       <Typography component="p" className={classes.tagsText}>
-        {item.tags.map(tag => tag.title)}
+        {item.tags.map(tag => tag.title).join(', ')}
       </Typography>
 
       <Typography component="p">{item.description}</Typography>

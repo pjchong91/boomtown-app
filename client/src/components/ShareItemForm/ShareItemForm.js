@@ -9,7 +9,8 @@ import {
   Select,
   Checkbox,
   ListItemText,
-  FormControl
+  FormControl,
+  FormHelperText, InputLabel,Input
 } from '@material-ui/core'
 import {
   resetImage,
@@ -22,10 +23,12 @@ import TextField from './TextField/TextField'
 import { withStyles } from '@material-ui/core/styles'
 import styles from './styles'
 
+
 class ShareForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      tagError: false,
       disabled: false,
       fileSelected: false,
       selectedTags: [],
@@ -34,30 +37,28 @@ class ShareForm extends Component {
   }
 
   onSubmit = values => {
-    console.log(values)
+    // console.log(values)
   }
 
   validate = values => {
     const errors = {}
-    if (!values.itemName) {
-      errors.itemName = 'Required'
+    if (!values.title) {
+      errors.title = 'Required'
     }
-    if (!values.itemDescription) {
-      errors.itemDescription = 'Required'
+    if (!values.description) {
+      errors.description = 'Required'
     }
-    // if (!values.itemTags.length === 0){
-    //   errors.itemTags = 'Required'
-    // }
+
     // if (values.itemTags.itemTags.length>0) {
-      // errors.itemTags = 'Required - Pick at least one'
-      // console.log(values.itemTags.itemTags,'hello')
+    //   errors.itemTags = 'Required - Pick at least one'
+    //   console.log(values.itemTags.itemTags,'hello')
     // }
 
     // this.setState({selectedTags:tags})
     // const selectedTags = this.state.selectedTags
     // this.setState(...selectedTags, tags)
 
-    // console.log(values)
+    // console.log(values.tags)
 
     return errors
   }
@@ -99,15 +100,29 @@ class ShareForm extends Component {
       tags
         .filter(t => this.state.selectedTags.indexOf(t.id) > -1)
         .map(t => ({ title: t.title, id: t.id }))
+       
     )
   }
+  // validateTags (){
+  //   console.log(this.state.selectedTags,'validates')
+  // }
 
   handleCheckbox(event) {
-    console.log(this.state.selectedTags, event, 'wot')
+    const errors = {}
     this.setState({
       selectedTags: event.target.value
     })
+
+    const minimumOne = event.target.value.length 
+
+    if (minimumOne === 0){
+     
+      this.setState({tagError:true})
+    } else this.setState({tagError:false})
+  
   }
+
+
 
   generateTagsText(tags, selected) {
     return tags
@@ -115,6 +130,11 @@ class ShareForm extends Component {
       .filter(e => e)
       .join(', ')
   }
+
+ 
+ 
+
+
   render() {
     const { classes } = this.props
     const { resetImage, updateNewItem, resetNewItem } = this.props
@@ -182,7 +202,7 @@ class ShareForm extends Component {
 
                     {/* <TagMenu /> */}
 
-                    <Typography>Tags (pick at least one!)</Typography>
+                    {/* <Typography className={classes.tagsPicker}>Tags</Typography> */}
                     {/* <Grid container>
                 
                     {tags && tags.map(tag => (
@@ -203,21 +223,28 @@ class ShareForm extends Component {
                     ))}
                   
               </Grid> */}
-                    <FormControl className={classes.tagSelector}>
-                      <Field name="tags">
+                    <FormControl id='tagSelector' className={classes.tagSelector} error={this.state.tagError}>
+                      <Field name="tags" >
                         {({ input, meta }) => {
                           return (
+                            <div>
+                                      <InputLabel htmlFor="select-multiple-checkbox" >Tags - Please select at least one</InputLabel>
+
                             <Select
                               multiple
                               value={this.state.selectedTags}
                               onChange={event => this.handleCheckbox(event)}
+                              error={this.state.tagError}
+                              input={<Input id="select-multiple-checkbox" className={classes.tagInputLabel} />}
+
                               renderValue={selected => {
-                                return this.generateTagsText(tags, selected)
+                                return (
+                                  this.generateTagsText(tags, selected)
+                                )
                               }}
                             >
                               {tags &&
                                 tags.map(tag => (
-                                  console.log(tag.id, tag.title),
                                   <MenuItem key={tag.id} value={tag.id}>
                                     <Checkbox
                                       checked={this.state.selectedTags.indexOf(tag.id) > -1}
@@ -225,10 +252,15 @@ class ShareForm extends Component {
                                     <ListItemText primary={tag.title} />
                                   </MenuItem>
                                 ))}
+
                             </Select>
+                            </div>
                           )
                         }}
+                        
                       </Field>
+                      {/* <FormHelperText>Select at least one</FormHelperText> */}
+
                     </FormControl>
 
                     <Button
@@ -258,7 +290,6 @@ class ShareForm extends Component {
 const mapDispatchToProps = dispatch => ({
   updateNewItem(item) {
     // Inside this function we can dispatch data to our reducer.
-    console.log(item)
     dispatch(updateNewItem(item))
   },
   resetNewItem() {
@@ -268,6 +299,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(resetImage())
   }
 })
+
+
 
 export default connect(
   undefined,

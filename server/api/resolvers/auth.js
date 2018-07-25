@@ -2,6 +2,7 @@ const { AuthenticationError } = require('apollo-server')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
+
 function setCookie({ tokenName, token, res }) {
   /**
    *  @TODO: Authentication - Server
@@ -19,12 +20,17 @@ function setCookie({ tokenName, token, res }) {
   // Refactor this method with the correct configuration values.
   res.cookie(tokenName, token, {
     // @TODO: Supply the correct configuration values for our cookie here
+    httpOnly : true,
+    secure : process.env.NODE_ENV === 'production',
+    maxAge: 1000*60*60*2 //2hr
   })
   // -------------------------------
 }
 
 function generateToken(user, secret) {
   const { id, email, fullname, bio } = user // Omit the password from the token
+  const token = jwt.sign( { id, email, fullname, bio } , secret, {expiresIn: '2h'})
+
   /**
    *  @TODO: Authentication - Server
    *
@@ -35,7 +41,9 @@ function generateToken(user, secret) {
    *  which can be decoded using the app secret to retrieve the stateless session.
    */
   // Refactor this return statement to return the cryptographic hash (the Token)
-  return ''
+  return token
+  
+ 
   // -------------------------------
 }
 
@@ -54,7 +62,9 @@ module.exports = function(app) {
          * and store that instead. The password can be decoded using the original password.
          */
         // @TODO: Use bcrypt to generate a cryptographic hash to conceal the user's password before storing it.
-        const hashedPassword = ''
+        // const hashedPassword = ''
+        const hashedPassword = await bcrypt.hash(args.user.password, 10)
+
         // -------------------------------
 
         const user = await context.pgResource.createUser({
@@ -65,13 +75,11 @@ module.exports = function(app) {
 
         setCookie({
           tokenName: app.get('JWT_COOKIE_NAME'),
-          token: generateToken(user, app.get('JWT_SECRET')),
+          token: generateToken(args.user, app.get('JWT_SECRET')),
           res: context.req.res
         })
 
-        return {
-          id: user.id
-        }
+        return true
       } catch (e) {
         throw new AuthenticationError(e)
       }
@@ -92,17 +100,15 @@ module.exports = function(app) {
         // Use bcrypt to compare the provided password to 'hashed' password stored in your database.
         const valid = false
         // -------------------------------
-        if (!valid || !user) throw 'User was not found.'
+        if (!valid || !args.user) throw 'User was not found.'
 
         setCookie({
           tokenName: app.get('JWT_COOKIE_NAME'),
-          token: generateToken(user, app.get('JWT_SECRET')),
+          token: generateToken(args.user, app.get('JWT_SECRET')),
           res: context.req.res
         })
 
-        return {
-          id: user.id
-        }
+        return true
       } catch (e) {
         throw new AuthenticationError(e)
       }

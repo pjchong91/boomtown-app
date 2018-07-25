@@ -10,7 +10,8 @@ module.exports = function(app) {
   app.set('PG_USER', process.env.PG_USER || 'boomtown')
   app.set('PG_PASSWORD', process.env.PG_PASSWORD || 'boomtown')
   app.set('PG_DB', process.env.PG_DB || 'boomtown')
-
+  app.set('JWT_COOKIE_NAME', 'COLA_COIN')
+  app.set('JWT_SECRET','COLA IS CAT')
   /**
    *  @TODO: Configuration Variables
    *
@@ -37,7 +38,9 @@ module.exports = function(app) {
    *  JWT_SECRET
    *
    *  And the following non-security related information should also be set for use elsewhere:
-   *
+   */
+  
+  /*
    *  JWT_COOKIE_NAME
    *  CORS_CONFIG (already set for you below)
    *

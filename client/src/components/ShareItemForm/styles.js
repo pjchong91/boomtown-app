@@ -19,7 +19,8 @@ const styles = theme => ({
         margin: '10px 0'
     },
     shareSubmitButton:{
-        margin:'10px 0'
+        margin:'10px 0',
+        display: 'block'
     },
     root:{
         [theme.breakpoints.up('sm')]:{
@@ -36,6 +37,9 @@ const styles = theme => ({
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center'
+    },
+    tagSelector:{
+        width: '100%'
     }
     
 

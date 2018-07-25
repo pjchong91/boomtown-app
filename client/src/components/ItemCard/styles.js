@@ -9,7 +9,7 @@ const styles = theme => ({
         height: 0,
         paddingTop: '56.25%', // 16:9,
         background: theme.palette.primary.main,
-        position: 'center'
+        backgroundPosition: 'center'
       },
       header:{
           textAlign: 'left'

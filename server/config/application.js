@@ -10,8 +10,8 @@ module.exports = function(app) {
   app.set('PG_USER', process.env.PG_USER || 'boomtown')
   app.set('PG_PASSWORD', process.env.PG_PASSWORD || 'boomtown')
   app.set('PG_DB', process.env.PG_DB || 'boomtown')
-  app.set('JWT_COOKIE_NAME', 'COLA_COIN')
-  app.set('JWT_SECRET','COLA IS CAT')
+  app.set('JWT_COOKIE_NAME', process.env.JWT_COOKIE_NAME || 'COLA_COIN')
+  app.set('JWT_SECRET', process.env.JWT_SECRET || 'COLA IS CAT')
   /**
    *  @TODO: Configuration Variables
    *

@@ -62,7 +62,6 @@ module.exports = function(app) {
          * and store that instead. The password can be decoded using the original password.
          */
         // @TODO: Use bcrypt to generate a cryptographic hash to conceal the user's password before storing it.
-        // const hashedPassword = ''
         const hashedPassword = await bcrypt.hash(args.user.password, 10)
 
         // -------------------------------
@@ -90,7 +89,7 @@ module.exports = function(app) {
         const user = await context.pgResource.getUserAndPasswordForVerification(
           args.user.email
         )
-
+console.log(user, 'search stuff')
         /**
          *  @TODO: Authentication - Server
          *
@@ -98,7 +97,13 @@ module.exports = function(app) {
          *  they submitted from the login form to decrypt the 'hashed' version stored in out database.
          */
         // Use bcrypt to compare the provided password to 'hashed' password stored in your database.
-        const valid = false
+        // const valid = false
+        const valid = await bcrypt.compare(
+          //Unhashed password first and hashed password second
+          args.user.password,
+          user.password
+        
+      )
         // -------------------------------
         if (!valid || !args.user) throw 'User was not found.'
 

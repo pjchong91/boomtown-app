@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { FormSpy, Form, Field } from 'react-final-form'
 import { connect } from 'react-redux'
 import ItemContainer from './../../containers/ItemsContainer'
@@ -10,7 +10,7 @@ import {
   Checkbox,
   ListItemText,
   FormControl,
-  FormHelperText, InputLabel,Input
+  FormHelperText, InputLabel,Input,
 } from '@material-ui/core'
 import {
   resetImage,
@@ -32,8 +32,10 @@ class ShareForm extends Component {
       disabled: false,
       fileSelected: false,
       selectedTags: [],
-      submitted: false
+      submitted: false,
+      imageSelectText: 'Select an Image'
     }
+    this.fileRef = React.createRef()
   }
 
   onSubmit = values => {
@@ -65,10 +67,10 @@ class ShareForm extends Component {
 
   //WOT iS THIS SUPPOSED TO BE???
   dispatchUpdate(values, tags, updateNewItem) {
-    if (!values.imageurl && this.state.fileSelected) {
-      this.getBase64Url().then(imageurl => {
+    if (!values.imageUrl && this.state.fileSelected) {
+      this.getBase64Url().then(imageUrl => {
         updateNewItem({
-          imageurl
+          imageUrl
         })
       })
     }
@@ -92,6 +94,11 @@ class ShareForm extends Component {
       }
       reader.readAsBinaryString(this.state.fileSelected)
     })
+  }
+
+  handleImageSelect = e => {
+    this.setState({ fileSelected: e.target.files[0]})
+    console.log(e.target.files[0])
   }
 
   applyTags(tags) {
@@ -123,7 +130,6 @@ class ShareForm extends Component {
   }
 
 
-
   generateTagsText(tags, selected) {
     return tags
       .map(t => (selected.indexOf(t.id) > -1 ? t.title : false))
@@ -131,6 +137,32 @@ class ShareForm extends Component {
       .join(', ')
   }
 
+  changeImageSelectButton(){
+    this.setState({imageSelectText:'Reset Image'})
+  }
+
+  async saveItem(values, tags, addItem){
+    const{
+      validity,
+      files:[file]
+    } = this.fileInput.current
+    if(!validity.valid || !file) return;
+    try{
+      const itemData = {
+        ... values,
+        tags: this.applyTags(tags)
+      }
+      await addItem.mutation({
+        variables:{
+          item:itemData,
+          image: file
+        }
+      })
+      this.setState({done:true})
+    }catch(e){
+      console.log(e)
+    }
+  }
  
  
 
@@ -156,7 +188,9 @@ class ShareForm extends Component {
               </Typography>
 
               <Form
-                onSubmit={this.onSubmit}
+                onSubmit={values=>{
+                  this.saveItem(values, tags, addItem)
+                }}
                 validate={this.validate}
                 render={({ handleSubmit, pristine, invalid, form, submitting, values }) => (
                   <form onSubmit={handleSubmit}>
@@ -169,12 +203,49 @@ class ShareForm extends Component {
                         return ''
                       }}
                     />
-                    <Button
+
+                    <Field name="imageurl">
+                    {(input, meta) => (
+                      <Fragment>
+                        <Button 
+                        onClick = {()=>{
+                          this.fileRef.current.click()
+                          //TODO: if clicked - and there is an image selected already, clear image from the state and start over
+                        }}> 
+                        <Typography className={classes.imageSelectText}>
+                        {this.state.imageSelectText}
+                        </Typography>
+                        </Button>
+                        <input 
+                        onChange = {(e)=>{
+                          this.handleImageSelect(e)
+                          this.changeImageSelectButton()
+                        }} 
+                        type="file"
+                        accept="image/*" 
+                        hidden 
+                        ref={this.fileRef}
+                        />
+                        </Fragment>
+                    )}
+                    </Field>
+
+                    {/* <Button
                       variant="contained"
                       className={classes.selectImageButton}
                     >
                       Select an Image
-                    </Button>
+                    </Button> */}
+
+                    {/* <Input
+                    classname={classes.fileUpload}
+                    type="file"
+                    inputRef={this.fileRef}
+                    onchange={event=>{
+                      this.handleImageSelect(event)
+                    }}
+                    /> */}
+
                     <div>
                       <Field
                         name="title"

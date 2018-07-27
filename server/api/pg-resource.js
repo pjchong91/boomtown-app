@@ -225,21 +225,19 @@ module.exports = function(postgres) {
 
                 const newItemInsert = {
                   text: `
-                    INSERT INTO items (title,description) VALUES ($1, $2)
+                    INSERT INTO items (title,description, ownerid) VALUES ($1, $2, $3)
                     RETURNING *`,
-                    values: [title, description]
+                    values: [title, description, user.id]
                 }
                 // Generate new Item query
                 // @TODO
                 // -------------------------------
 
                 // Insert new Item
-               try{
+             
                  const newItem = await client.query(newItemInsert)
-                 return newItem.rows[0].id
-               } catch(e){
-                 console.log(e)
-               }
+                 const itemid = newItem.rows[0].id
+              
                 // -------------------------------
 
                 const imageUploadQuery = {
@@ -256,7 +254,6 @@ module.exports = function(postgres) {
 try{
                 // Upload image
                 await client.query(imageUploadQuery)
-                return newItem.rows[0].id
               } catch(e){
                 console.log(e)
               }
@@ -266,12 +263,11 @@ try{
                 // -------------------------------
                 const tagsQuery={
                   text:`
-                    INSERT INTO itemtags(itemid,tagid) VALUES ${tagsQueryString($1, $2, result)}`,
-                  values:[tags, itemid]
+                    INSERT INTO itemtags(tagid, itemid) VALUES ${tagsQueryString([...tags], itemid, '')}`,
+                  values: tags.map(tag=>tag.id)
                 }
 try{
                 await client.query(tagsQuery)
-                return newItem.rows[0].id
                } catch(e){
                  console.log(e)
                }
@@ -287,7 +283,7 @@ try{
                   // release the client back to the pool
                   done()
                   // Uncomment this resolve statement when you're ready!
-                  // resolve(newItem.rows[0])
+                  resolve(newItem.rows[0])
                   // -------------------------------
                 })
               })

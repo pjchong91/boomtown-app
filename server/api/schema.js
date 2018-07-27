@@ -82,7 +82,7 @@ directive @auth on OBJECT | FIELD_DEFINITION
     # TODO: CONVERT IMAGE BACK TO REQUIRED?? 
      addItem(item: NewItemInput! image: Upload): Item 
     signup(user: SignupInput!): User
-    login(user: LoginInput!): User
+    login(user: LoginInput!): Boolean!
     logout: Boolean
   }
 `

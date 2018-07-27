@@ -111,13 +111,11 @@ console.log(user, 'search stuff')
 
         setCookie({
           tokenName: app.get('JWT_COOKIE_NAME'),
-          token: generateToken(args.user, app.get('JWT_SECRET')),
+          token: generateToken(user, app.get('JWT_SECRET')),
           res: context.req.res
         })
 
-       return {
-          id: user.id
-        }
+       return true
       } catch (e) {
         throw new AuthenticationError(e)
       }

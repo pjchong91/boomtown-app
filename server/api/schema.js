@@ -54,19 +54,19 @@ directive @auth on OBJECT | FIELD_DEFINITION
     id: ID!
   }
 
-  input NewInputType {
+  input NewItemInput {
     title: String!
     description: String
     tags: [AssignedTag]!
   }
 
-  input NewUser {
+  input SignupInput {
     fullname: String!
     email: String!
     password: String!
   }
 
-  input LoginUser {
+  input LoginInput {
     email: String!
     password: String!
   }
@@ -79,9 +79,10 @@ directive @auth on OBJECT | FIELD_DEFINITION
   }
 
   type Mutation {
-     addItem(item: NewInputType! image: Upload): Item
-    signup(user: NewUser!): Boolean
-    login(user: LoginUser!): Boolean
+    # TODO: CONVERT IMAGE BACK TO REQUIRED?? 
+     addItem(item: NewItemInput! image: Upload): Item 
+    signup(user: SignupInput!): User
+    login(user: LoginInput!): User
     logout: Boolean
   }
 `

@@ -127,11 +127,18 @@ class ShareForm extends Component {
   }
 
   async saveItem(values, tags, addItem) {
+    console.log({validity, files:[file]} ,'current file')
+
     const {
       validity,
       files: [file]
-    } = this.fileInput.current
+    } = this.fileRef.current
+
+    console.log(this.fileRef.current, file ,'current file')
+    console.log({validity}, 'am i valid')
+
     if (!validity.valid || !file) return
+ 
     try {
       const itemData = {
         ...values,
@@ -173,8 +180,8 @@ class ShareForm extends Component {
 
               <Form
                 onSubmit={values => {
-                  // this.saveItem(values, tags, addItem)
-                  console.log(values)
+                  this.saveItem(values, tags, addItem)
+                  console.log( 'form values')
                 }}
                 validate={this.validate}
                 render={({

@@ -32,7 +32,7 @@ const Items = ({ classes }) => {
             lg={4}
             className={classes.itemCard}
             >
-           <ItemCard item={item}
+           <ItemCard item={item} 
          />
         
            </Grid>

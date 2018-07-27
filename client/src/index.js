@@ -12,23 +12,7 @@ import registerServiceWorker from './registerServiceWorker'
 import theme from './theme'
 import client from './apollo'
 
-/**
- * @TODO: Initialize Apollo Client
- *
- * Uncomment the following line when Apollo Client is configured:
- *
- *
- *
- * Below in your <App />, wrap your pages in an <ApolloProvider /> component
- * and pass it `client` as the `client` prop value so they will
- * have access to data exposed by your GraphQL API.
- */
 
-/**
- * @TODO: Add Routing
- *
- * Uncomment the following line when your routes are configured
- */
 import Routes from './routes/index'
 /*
  * Below in your <App />, nest your <Routes /> inside of <BrowserRouter />
@@ -40,40 +24,39 @@ import Routes from './routes/index'
  *
  * Uncomment the following line when your Redux store is configured
  */
-  import store from './redux'
- 
- /* Below in your <App />, wrap a <ReduxProvider /> component around all
+import store from './redux'
+
+/* Below in your <App />, wrap a <ReduxProvider /> component around all
  * of the app's children, and pass it the imported `store` as the `store`
  * prop's value.
  */
 
 /**
  * @TODO: Add the Viewer Context
- *
- * import { ViewerProvider } from './context/ViewerProvider'
- *
- * Below in your <App />, wrap the <ViewerProvider /> component around
+ */
+ import { ViewerProvider } from './context/ViewerProvider'
+ 
+ /* Below in your <App />, wrap the <ViewerProvider /> component around
  * the <BrowserRouter /> component so the router is aware of whether a
  * user is currently logged in and who that user is.
  */
 
-// @TODO: Remove this import once you have your router working below
-import Home from './pages/Items'
-// -------------------------------
 
 import './index.css'
 
 const App = () => {
   return (
     <ReduxProvider store={store}>
-    <MuiThemeProvider theme={theme}>
-      <CssBaseline />
-      <ApolloProvider client={client}>
-        <BrowserRouter>
-          <Routes />
-        </BrowserRouter>
-      </ApolloProvider>
-    </MuiThemeProvider>
+      <MuiThemeProvider theme={theme}>
+        <CssBaseline />
+        <ApolloProvider client={client}>
+          <ViewerProvider>
+            <BrowserRouter>
+              <Routes />
+            </BrowserRouter>
+          </ViewerProvider>
+        </ApolloProvider>
+      </MuiThemeProvider>
     </ReduxProvider>
   )
 }

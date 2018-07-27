@@ -22,7 +22,7 @@ module.exports = function(postgres) {
     async createUser({ fullname, email, password }) {
       const newUserInsert = {
         text:
-          'INSERT INTO users (fullname, email, password) VALUES ($1, $2, $3)', // @TODO: Authentication - Server
+          'INSERT INTO users (fullname, email, password) VALUES ($1, $2, $3) RETURNING *', // @TODO: Authentication - Server
         values: [fullname, email, password]
       }
       try {
@@ -214,8 +214,7 @@ module.exports = function(postgres) {
               // Convert image (file stream) to Base64
               const imageStream = image.stream.pipe(strs('base64'))
 
-              // let base64Str = 'data:image/*;base64'
-              let base64Str = ''
+              let base64Str = 'data:image/*;base64'
               imageStream.on('data', data => {
                 base64Str += data
               })
@@ -224,50 +223,58 @@ module.exports = function(postgres) {
                 // Image has been converted, begin saving things
                 const { title, description, tags } = item
 
-                // const newItemInsert = {
-                //   text: `WITH new_item_with_tags AS (
-                //     INSERT INTO items (title,description) VALUES ($1, $2)
-                //     RETURNING *)`,
-                //     values: [title, description]
-                // }
+                const newItemInsert = {
+                  text: `
+                    INSERT INTO items (title,description) VALUES ($1, $2)
+                    RETURNING *`,
+                    values: [title, description]
+                }
                 // Generate new Item query
                 // @TODO
                 // -------------------------------
 
                 // Insert new Item
-              //  try{
-              //    const newItem = await client.query(newItemInsert)
-              //    return newItem.rows[0].id
-              //  } catch(e){
-              //    console.log(e)
-              //  }
+               try{
+                 const newItem = await client.query(newItemInsert)
+                 return newItem.rows[0].id
+               } catch(e){
+                 console.log(e)
+               }
                 // -------------------------------
 
                 const imageUploadQuery = {
                   text:
                     'INSERT INTO uploads (itemid, filename, mimetype, encoding, data) VALUES ($1, $2, $3, $4, $5) RETURNING *',
                   values: [
-                    // itemid,
+                    itemid,
                     image.filename,
                     image.mimetype,
                     'base64',
                     base64Str
                   ]
                 }
-
+try{
                 // Upload image
                 await client.query(imageUploadQuery)
-
+                return newItem.rows[0].id
+              } catch(e){
+                console.log(e)
+              }
               
                 // Generate tag relationships query (use the'tagsQueryString' helper function provided)
                 // @TODO
                 // -------------------------------
-                // const tagsQuery={
-                //   text:'INSERT INTO itemtags (itemid, tagid) VALUES ${tagsQueryString (/*?????*/) }',
-                //   valies:[]
-                // }
-
+                const tagsQuery={
+                  text:`
+                    INSERT INTO itemtags(itemid,tagid) VALUES ${tagsQueryString($1, $2, result)}`,
+                  values:[tags, itemid]
+                }
+try{
                 await client.query(tagsQuery)
+                return newItem.rows[0].id
+               } catch(e){
+                 console.log(e)
+               }
                 // Insert tags
                 // @TODO
                 // -------------------------------

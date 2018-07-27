@@ -74,11 +74,13 @@ module.exports = function(app) {
 
         setCookie({
           tokenName: app.get('JWT_COOKIE_NAME'),
-          token: generateToken(args.user, app.get('JWT_SECRET')),
+          token: generateToken(user, app.get('JWT_SECRET')),
           res: context.req.res
         })
 
-        return true
+        return {
+          id: user.id
+        }
       } catch (e) {
         throw new AuthenticationError(e)
       }
@@ -113,7 +115,9 @@ console.log(user, 'search stuff')
           res: context.req.res
         })
 
-        return true
+       return {
+          id: user.id
+        }
       } catch (e) {
         throw new AuthenticationError(e)
       }

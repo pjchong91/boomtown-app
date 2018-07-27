@@ -3,37 +3,16 @@ import Grid from '@material-ui/core/Grid'
 import React from 'react'
 import Typography from '@material-ui/core/Typography'
 
-// import { Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 
 import AccountForm from '../../components/AccountForm'
 
+
 import styles from './styles'
-import gql from "graphql-tag";
-import { Query } from "react-apollo";
-import { ITEM_QUERY, ALL_ITEMS_QUERY, ALL_USER_ITEMS_QUERY, ALL_TAGS_QUERY } from '../../apollo/queries';
-
-
-// const GEt_query = gql`
-//   query {
-//     user(id: 6) {
-//       id
-//       fullname
-//     }
-//   }
-// `;
-
 
 const Home = ({ classes }) => {
   return (
-
-    // <Query query={ALL_TAGS_QUERY}>
-    // {({ loading, error, data }) => {
-    //   if (loading) return "Loading...";
-    //   if (error) return `Error! ${error.message}`;
-
-    //   return (
-    //     console.log(data),
-        <Grid
+    <Grid
       container
       className={classes.root}
       direction="row"
@@ -59,10 +38,10 @@ const Home = ({ classes }) => {
         <AccountForm />
       </Grid>
     </Grid>
-    //   );
-    // }}
-  // </Query>
   )
 }
+
+
+
 
 export default withStyles(styles)(Home)

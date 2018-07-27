@@ -54,7 +54,7 @@ directive @auth on OBJECT | FIELD_DEFINITION
     id: ID!
   }
 
-  input NewItemInput {
+  input NewInputType {
     title: String!
     description: String
     tags: [AssignedTag]!
@@ -79,7 +79,7 @@ directive @auth on OBJECT | FIELD_DEFINITION
   }
 
   type Mutation {
-     addItem(item: NewInputType! image: Upload!): Item
+     addItem(item: NewInputType! image: Upload): Item
     signup(user: NewUser!): Boolean
     login(user: LoginUser!): Boolean
     logout: Boolean

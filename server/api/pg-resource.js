@@ -21,7 +21,8 @@ module.exports = function(postgres) {
   return {
     async createUser({ fullname, email, password }) {
       const newUserInsert = {
-        text: 'INSERT INTO users (fullname, email, password) VALUES ($1, $2, $3)', // @TODO: Authentication - Server
+        text:
+          'INSERT INTO users (fullname, email, password) VALUES ($1, $2, $3)', // @TODO: Authentication - Server
         values: [fullname, email, password]
       }
       try {
@@ -213,6 +214,7 @@ module.exports = function(postgres) {
               // Convert image (file stream) to Base64
               const imageStream = image.stream.pipe(strs('base64'))
 
+              // let base64Str = 'data:image/*;base64'
               let base64Str = ''
               imageStream.on('data', data => {
                 base64Str += data
@@ -222,12 +224,23 @@ module.exports = function(postgres) {
                 // Image has been converted, begin saving things
                 const { title, description, tags } = item
 
+                // const newItemInsert = {
+                //   text: `WITH new_item_with_tags AS (
+                //     INSERT INTO items (title,description) VALUES ($1, $2)
+                //     RETURNING *)`,
+                //     values: [title, description]
+                // }
                 // Generate new Item query
                 // @TODO
                 // -------------------------------
 
                 // Insert new Item
-                // @TODO
+              //  try{
+              //    const newItem = await client.query(newItemInsert)
+              //    return newItem.rows[0].id
+              //  } catch(e){
+              //    console.log(e)
+              //  }
                 // -------------------------------
 
                 const imageUploadQuery = {
@@ -243,21 +256,18 @@ module.exports = function(postgres) {
                 }
 
                 // Upload image
-                const uploadedImage = await client.query(imageUploadQuery)
-                const imageid = uploadedImage.rows[0].id
+                await client.query(imageUploadQuery)
 
-                // Generate image relation query
-                // @TODO
-                // -------------------------------
-
-                // Insert image
-                // @TODO
-                // -------------------------------
-
+              
                 // Generate tag relationships query (use the'tagsQueryString' helper function provided)
                 // @TODO
                 // -------------------------------
+                // const tagsQuery={
+                //   text:'INSERT INTO itemtags (itemid, tagid) VALUES ${tagsQueryString (/*?????*/) }',
+                //   valies:[]
+                // }
 
+                await client.query(tagsQuery)
                 // Insert tags
                 // @TODO
                 // -------------------------------

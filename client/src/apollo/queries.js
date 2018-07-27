@@ -46,7 +46,6 @@ export const ITEM_QUERY = gql`
 export const ALL_ITEMS_QUERY = gql`
   query items($id: ID) {
     items(filter: $id) {
-      # @TODO: Query items (optionally by tag id) and return the ItemFields fragment.
       ...ItemFields
     }
   }
@@ -83,12 +82,13 @@ export const ALL_TAGS_QUERY = gql`
   }
 `
 
-// export const ADD_ITEM_MUTATION = gql`
-//   mutation addItem($item: NewItemInput!, $image: Upload!) {
-//     # @TODO: Pass the item and image into the addItem mutation as arguments
-//     # and return the new item id when the mutation is complete.
-//   }
-// `
+export const ADD_ITEM_MUTATION = gql`
+  mutation addItem($item: NewItemInput!, $image: Upload!) {
+    addItem(item: $item, image: $image)
+    # @TODO: Pass the item and image into the addItem mutation as arguments
+    # and return the new item id when the mutation is complete.
+  }
+`
 
 // /**
 //  * Auth-related queries and mutations.

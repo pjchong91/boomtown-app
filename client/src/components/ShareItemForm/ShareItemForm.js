@@ -175,21 +175,31 @@ class ShareForm extends Component {
           image: file
         }
       })
-    this.props.reset()
-      this.resetAllTheThings()
-
-      resetImage()
-      resetNewItem()
+     
    
     } catch (e) {
       console.log(e)
     }
   }
 
-resetAllTheThings(){
-  this.setState({fileSelected: false})
-  this.setState({selectedTags:[]})
-}
+  handleShareReset(resetImage,resetNewItem){
+    this.setState({selectedTags:[]})
+    this.setState({fileSelected: false})
+    resetImage()
+    resetNewItem()
+  }
+  // handleResets(){
+
+  //   this.handleCardReset()
+
+  // }
+
+  // handleCardReset(){
+  //   resetImage()
+  //   resetNewItem()
+  // }
+
+
 
   render() {
     const { classes } = this.props
@@ -215,7 +225,7 @@ resetAllTheThings(){
 
               <Form
                 onSubmit={values => {
-                  this.saveItem(values, tags, addItem, resetImage, resetNewItem)
+                  this.saveItem(values, tags, addItem)
 
                 }}
                
@@ -232,7 +242,8 @@ resetAllTheThings(){
                   <form 
                   onSubmit={event =>{
                     handleSubmit(event)
-
+                    form.reset()
+                    this.handleShareReset(resetImage,resetNewItem)
                     }
                    
                   } id="shareItemForm">

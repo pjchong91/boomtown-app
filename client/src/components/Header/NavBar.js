@@ -37,7 +37,6 @@ const styles = {
 
 function ButtonAppBar(props) {
   const { classes } = props;
-  console.log(window.location.pathname)
    
     return (
       <div className={classes.root}>

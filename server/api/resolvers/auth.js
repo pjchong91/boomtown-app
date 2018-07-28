@@ -91,7 +91,6 @@ module.exports = function(app) {
         const user = await context.pgResource.getUserAndPasswordForVerification(
           args.user.email
         )
-console.log(user, 'search stuff')
         /**
          *  @TODO: Authentication - Server
          *

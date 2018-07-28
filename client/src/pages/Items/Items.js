@@ -27,6 +27,7 @@ const Items = ({ classes }) => {
           
           return items.map(item => (
             <Grid item 
+            key={item.id}
             xs={12}
             md={6}
             lg={4}

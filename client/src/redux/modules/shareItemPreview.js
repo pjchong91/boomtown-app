@@ -17,7 +17,7 @@ const initialState = {
   title: 'Name your item',
   description: 'Describe your item',
   tags: [],
-  imageUrl:
+  imageurl:
     'https://dummyimage.com/350x250/c4c4c4/212121&text=Please+select+an+image',
   created: new Date(),
   itemowner: {
@@ -28,7 +28,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case RESET_IMAGE: {
-      return { ...state, imageUrl: initialState.imageUrl }
+      return { ...state, imageurl: initialState.imageurl }
     }
     case UPDATE_NEW_ITEM: {
       return {
@@ -39,7 +39,6 @@ export default (state = initialState, action) => {
     case RESET_NEW_ITEM: {
       return {
           //How come this one doesn't need states???
-        // ...state,
         ...initialState
       }
     }

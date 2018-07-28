@@ -112,7 +112,11 @@ module.exports = function(postgres) {
            * NTS: I have added a borrowerid parameter.  I assumed this filtering feature was for the landing page(?) where you don't want to see your own items or items not available for borrowing
            */
 
-          text: `SELECT * FROM items WHERE (ownerid != $1 AND borrowerid IS NULL) OR ($1 IS NULL)`,
+          text: `SELECT item.id, item.title,item.description,item.created, item.ownerid, item.borrowerid, up.data as imageurl 
+          FROM items item
+          INNER JOIN uploads up
+          ON up.itemid = item.id
+          WHERE (ownerid != $1 AND borrowerid IS NULL) OR ($1 IS NULL)`,
           values: [idToOmit]
         })
         if (!items) throw 'Items not found'
@@ -214,7 +218,7 @@ module.exports = function(postgres) {
               // Convert image (file stream) to Base64
               const imageStream = image.stream.pipe(strs('base64'))
 
-              let base64Str = 'data:image/*;base64'
+              let base64Str = 'data:image/*;base64,'
               imageStream.on('data', data => {
                 base64Str += data
               })

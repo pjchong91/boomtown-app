@@ -30,17 +30,14 @@ class ShareForm extends Component {
     super(props)
     this.state = {
       tagError: false,
-      disabled: false,
       fileSelected: false,
       selectedTags: [],
-      submitted: false,
-      imageSelectText: 'Select an Image'
+      tagsPristine: true,
+      enabledByTag: false,
+      enabledByImage: false,
+      enabledByText: false,
     }
     this.fileRef = React.createRef()
-  }
-
-  onSubmit = values => {
-    // console.log(values)
   }
 
   validate = values => {
@@ -51,16 +48,38 @@ class ShareForm extends Component {
     if (!values.description) {
       errors.description = 'Required'
     }
-
+    if(values.description && values.title){
+      this.setState({enabledByText: true})
+    }
+    
     return errors
   }
 
-  //WOT iS THIS SUPPOSED TO BE???
+  //Check has the tags menu been touched?  And if so, have tags been selected?  If not, throw an error
+  validateTags (){
+    if (!this.state.tagsPristine && this.state.selectedTags.length === 0){
+      this.setState({tagError:true})
+    } else {
+      this.setState({tagError: false})
+      this.setState({enabledByTag: true})
+    }
+  }
+
+  //If people try to submit when the page is loaded & tags are not yet showing error for no tags selected
+  //TODO: Delete this if button not enabled until fields complete
+  validateTagsSubmit(){
+    if (this.state.selectedTags.length ===0){
+      this.setState({tagError:true})
+      
+    }
+  }
+
+  //Updates card according to changes in the form
   dispatchUpdate(values, tags, updateNewItem) {
-    if (!values.imageUrl && this.state.fileSelected) {
-      this.getBase64Url().then(imageUrl => {
+    if (!values.imageurl && this.state.fileSelected) {
+      this.getBase64Url().then(imageurl => {
         updateNewItem({
-          imageUrl
+          imageurl
         })
       })
     }
@@ -69,6 +88,7 @@ class ShareForm extends Component {
       ...values,
       tags: this.applyTags(tags)
     })
+   
   }
 
   //converts an image to base64 string
@@ -77,7 +97,7 @@ class ShareForm extends Component {
       const reader = new FileReader()
       reader.onload = e => {
         resolve(
-          `data:${this.state.fileSelected.mimeType};base64, ${btoa(
+          `data:${this.state.fileSelected.type};base64, ${btoa(
             e.target.result
           )}`
         )
@@ -88,6 +108,8 @@ class ShareForm extends Component {
 
   handleImageSelect = e => {
     this.setState({ fileSelected: e.target.files[0] })
+    this.setState({enabledByImage:true})
+
   }
 
   applyTags(tags) {
@@ -98,21 +120,13 @@ class ShareForm extends Component {
         .map(t => ({ title: t.title, id: t.id }))
     )
   }
-  // validateTags (){
-  //   console.log(this.state.selectedTags,'validates')
-  // }
 
   handleCheckbox(event) {
-    const errors = {}
     this.setState({
       selectedTags: event.target.value
     })
-
-    const minimumOne = event.target.value.length
-
-    if (minimumOne === 0) {
-      this.setState({ tagError: true })
-    } else this.setState({ tagError: false })
+    this.validateTags();
+   
   }
 
   generateTagsText(tags, selected) {
@@ -122,20 +136,24 @@ class ShareForm extends Component {
       .join(', ')
   }
 
+  handleTagsPristine(){
+    this.setState({tagsPristine: false})
+
+    this.validateTags();
+
+  }
+
+
   changeImageSelectButton() {
     this.setState({ imageSelectText: 'Reset Image' })
   }
 
-  async saveItem(values, tags, addItem) {
-    console.log({validity, files:[file]} ,'current file')
+  async saveItem(values, tags, addItem, resetImage, resetNewItem) {
 
     const {
       validity,
       files: [file]
     } = this.fileRef.current
-
-    console.log(this.fileRef.current, file ,'current file')
-    console.log({validity}, 'am i valid')
 
     if (!validity.valid || !file) return
  
@@ -150,11 +168,21 @@ class ShareForm extends Component {
           image: file
         }
       })
-      this.setState({ done: true })
+    
+      // this.resetAllTheThings()
+
+      // resetImage()
+      // resetNewItem()
+   
     } catch (e) {
       console.log(e)
     }
   }
+
+resetAllTheThings(){
+  this.setState({fileSelected: false})
+  this.setState({selectedTags:[]})
+}
 
   render() {
     const { classes } = this.props
@@ -180,9 +208,10 @@ class ShareForm extends Component {
 
               <Form
                 onSubmit={values => {
-                  this.saveItem(values, tags, addItem)
-                  console.log( 'form values')
+                  this.saveItem(values, tags, addItem, resetImage, resetNewItem)
+
                 }}
+               
                 validate={this.validate}
                 render={({
                   handleSubmit,
@@ -190,14 +219,22 @@ class ShareForm extends Component {
                   invalid,
                   form,
                   submitting,
-                  values
+                  values,
+                  reset
                 }) => (
-                  <form onSubmit={handleSubmit}>
+                  <form 
+                  onSubmit={event =>{
+                    handleSubmit(event)
+
+                    }
+                   
+                  } id="shareItemForm">
                     <FormSpy
                       subscription={{ values: true }}
                       component={({ values }) => {
                         if (values) {
                           this.dispatchUpdate(values, tags, updateNewItem)
+                          
                         }
                         return ''
                       }}
@@ -213,7 +250,7 @@ class ShareForm extends Component {
                             }}
                           >
                             <Typography className={classes.imageSelectText}>
-                              {this.state.imageSelectText}
+                              {!this.state.fileSelected ? 'Select an Image' : 'Reset Image'}
                             </Typography>
                           </Button>
                           <input
@@ -263,7 +300,7 @@ class ShareForm extends Component {
                       className={classes.tagSelector}
                       error={this.state.tagError}
                     >
-                      <Field name="tags">
+                      <Field name="tags" prisitine={this.state.tagsPristine}>
                         {({ input, meta }) => {
                           return (
                             <div>
@@ -273,6 +310,7 @@ class ShareForm extends Component {
 
                               <Select
                                 multiple
+                                onClick={()=>this.handleTagsPristine()}
                                 value={this.state.selectedTags}
                                 onChange={event => this.handleCheckbox(event)}
                                 error={this.state.tagError}
@@ -304,7 +342,6 @@ class ShareForm extends Component {
                           )
                         }}
                       </Field>
-                      {/* <FormHelperText>Select at least one</FormHelperText> */}
                     </FormControl>
 
                     <Button
@@ -312,7 +349,9 @@ class ShareForm extends Component {
                       variant="contained"
                       color="primary"
                       className={classes.shareSubmitButton}
-                      disabled={this.state.disabled}
+                      disabled={ !(this.state.enabledByText && this.state.enabledByImage && this.state.enabledByTag)}
+                      onClick={()=>this.validateTagsSubmit()}
+                      
                     >
                       Share
                     </Button>

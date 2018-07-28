@@ -16,7 +16,6 @@ export const ViewerProvider = ({ children }) => {
   return (
 <Query query={VIEWER_QUERY}>
   {({data:{viewer}, loading, error})=>{
-    console.log(viewer, 'this is the viewer')
     return(
       <ViewerContext.Provider value={{ viewer,loading, error}}>
       {children}

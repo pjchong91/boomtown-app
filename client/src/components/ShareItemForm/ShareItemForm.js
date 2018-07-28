@@ -44,9 +44,12 @@ class ShareForm extends Component {
     const errors = {}
     if (!values.title) {
       errors.title = 'Required'
+      this.setState({enabledByText: false})
     }
     if (!values.description) {
       errors.description = 'Required'
+      this.setState({enabledByText: false})
+
     }
     if(values.description && values.title){
       this.setState({enabledByText: true})
@@ -59,9 +62,13 @@ class ShareForm extends Component {
   validateTags (){
     if (!this.state.tagsPristine && this.state.selectedTags.length === 0){
       this.setState({tagError:true})
+      this.setState({enabledByTag: false})
+      console.log('I HAVE AN ERROR')
     } else {
       this.setState({tagError: false})
       this.setState({enabledByTag: true})
+      console.log('NO ERRORS')
+
     }
   }
 
@@ -109,8 +116,10 @@ class ShareForm extends Component {
   handleImageSelect = e => {
     this.setState({ fileSelected: e.target.files[0] })
     this.setState({enabledByImage:true})
+   
 
   }
+
 
   applyTags(tags) {
     return (
@@ -144,9 +153,7 @@ class ShareForm extends Component {
   }
 
 
-  changeImageSelectButton() {
-    this.setState({ imageSelectText: 'Reset Image' })
-  }
+ 
 
   async saveItem(values, tags, addItem, resetImage, resetNewItem) {
 
@@ -168,11 +175,11 @@ class ShareForm extends Component {
           image: file
         }
       })
-    
-      // this.resetAllTheThings()
+    this.props.reset()
+      this.resetAllTheThings()
 
-      // resetImage()
-      // resetNewItem()
+      resetImage()
+      resetNewItem()
    
     } catch (e) {
       console.log(e)
@@ -256,7 +263,6 @@ resetAllTheThings(){
                           <input
                             onChange={e => {
                               this.handleImageSelect(e)
-                              this.changeImageSelectButton()
                             }}
                             type="file"
                             accept="image/*"

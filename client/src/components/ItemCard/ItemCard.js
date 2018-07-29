@@ -13,12 +13,15 @@ import {
 import Gravatar from 'react-gravatar'
 import moment from 'moment'
 import styles from './styles'
+import { Link } from 'react-router-dom';
+
 
 
 
 const ItemCard = ({ classes, item }) => (
   <Card className={classes.card}>
     <CardMedia className={classes.media} image={item.imageurl}></CardMedia>
+    <Link to={`/profile/${item.itemowner.id}`}>
     <CardHeader
       avatar={
         <Gravatar className={classes.avatar} email={item.itemowner.email} />
@@ -27,7 +30,9 @@ const ItemCard = ({ classes, item }) => (
       title={item.itemowner.fullname}
       subheader={moment(new Date(item.created)).fromNow()}
       className={classes.header}
+      
     />
+    </Link>
     <CardContent className={classes.content}>
       <Typography gutterBottom variant="headline" component="h2">
         {item.title}

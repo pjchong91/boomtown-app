@@ -34,7 +34,8 @@ const userItemsData = ({ id, render }) =>
     {({viewer}) => (
       <Query query={ALL_USER_ITEMS_QUERY} 
       // variables={{ id: id || viewer.id }}
-      variables={{id: viewer.id}}
+      // variables={{id: userid || viewer.id}}
+      variables={{id: id}}
       >
     {({ loading, error, data: { user } ={} }) =>
       render({ loading, error, user })

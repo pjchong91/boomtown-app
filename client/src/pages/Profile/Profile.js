@@ -22,6 +22,7 @@ const Profile = ({ classes, match, props }) => {
   return (
     // <h1>Hello {match.params.userid}</h1>
     <ItemsContainer id={match.params.userid}>
+    {/* <ItemsContainer id='26'> */}
       {({ userItemsData: { loading, error, user, viewer } }) => {
         if (loading) return 'Dootdootdoot'
         console.log(user.items)

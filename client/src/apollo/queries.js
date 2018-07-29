@@ -111,9 +111,9 @@ export const VIEWER_QUERY = gql`
 export const LOGOUT_MUTATION = gql`
   mutation {
     # @TODO: Run the logout mutation.
-    mutation{
+    
       logout
-    }
+    
   }
 `
 

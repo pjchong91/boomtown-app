@@ -10,6 +10,11 @@ const styles = theme => ({
         backgroundColor: theme.palette.primary.main,
         width: '100%'
     },
+    selectImageButton2:{
+        backgroundColor: 'transparent',
+        border:'1px solid rgba(0, 0, 0, 0.23)',
+        width: '100%'
+    },
     inputName: {
         width: '100%',
         margin: '10px 0'

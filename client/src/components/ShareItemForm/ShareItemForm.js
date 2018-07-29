@@ -246,6 +246,9 @@ class ShareForm extends Component {
                       {(input, meta) => (
                         <Fragment>
                           <Button
+                         
+                          className= {`${!this.state.fileSelected ? classes.selectImageButton : classes.selectImageButton2
+                          }`}
                             onClick={() => {
                               this.fileRef.current.click()
                               //TODO: if clicked - and there is an image selected already, clear image from the state and start over
@@ -255,6 +258,7 @@ class ShareForm extends Component {
                               {!this.state.fileSelected
                                 ? 'Select an Image'
                                 : 'Reset Image'}
+                        
                             </Typography>
                           </Button>
                           <input

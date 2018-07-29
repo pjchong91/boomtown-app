@@ -4,11 +4,10 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Link } from 'react-router-dom';
+import { createSignalIfSupported } from 'apollo-link-http-common';
 
-const options = [
-  'Your Profile',
-  'Sign Out'
-];
+import AuthContainer from '../../../containers/AuthContainer'
+
 
 const ITEM_HEIGHT = 48;
 
@@ -51,19 +50,21 @@ class LongMenu extends React.Component {
             },
           }}
         >
+
         <Link to="./profile">
         <MenuItem key='Your Profile'  onClick={this.handleClose} >Your Profile</MenuItem>
         </Link>
 
-        <Link to="./welcome">
-        <MenuItem key='Sign Out' onClick={this.handleClose}>Sign Out </MenuItem>
-        </Link>
-          {/* {options.map(option => (
-              <Link to='./{option}'>
-            <MenuItem key={option} onClick={this.handleClose}>
-              {option}
-            </MenuItem>
-            </Link> */}
+<AuthContainer>
+{({ logout }) => {
+       return(
+        <MenuItem key='Sign Out' onClick={()=>{logout.mutation()}}>Sign Out </MenuItem>
+ 
+       )
+        
+          }}
+          </AuthContainer>
+          
           ))}
         </Menu>
       </div>

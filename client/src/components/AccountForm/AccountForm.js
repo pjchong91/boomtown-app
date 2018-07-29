@@ -62,6 +62,8 @@ class AccountForm extends Component {
 
   render() {
     const { classes } = this.props
+    const required = value => (value ? undefined : "Required");
+
 
     return (
       <AuthContainer>
@@ -92,36 +94,48 @@ class AccountForm extends Component {
             >
               {!this.state.formToggle && (
                 <FormControl fullWidth className={classes.formControl}>
-                  <InputLabel htmlFor="fullname">Username</InputLabel>
-                  <Field name="fullname">
+                  <InputLabel htmlFor="fullname" className={classes.loginLabel}>Username</InputLabel>
+                  <Field name="fullname" validate={required}>
                     {({ input, meta }) => (
+                      <div>
                       <Input id="fullname" type="text" {...input} />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                      </div>
                     )}
                   </Field>
                 </FormControl>
               )}
               <FormControl fullWidth className={classes.formControl}>
-                <InputLabel htmlFor="email">Email</InputLabel>
-                <Field name="email">
+                <InputLabel htmlFor="email" className={classes.loginLabel}>Email</InputLabel>
+                <Field name="email" validate={required}>
                   {({ input, meta }) => (
+                    <div>
                     <Input id="email" type="text" {...input} />
+                    {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                    
                   )}
+                  
                 </Field>
               </FormControl>
               <FormControl fullWidth className={classes.formControl}>
-                <InputLabel htmlFor="password">Password</InputLabel>
-                <Field name="password">
+                <InputLabel htmlFor="password" className={classes.loginLabel}>Password</InputLabel>
+                <Field name="password" validate={required} >
                   {({ input, meta }) => (
                     <div>
-                      <Input id="password" type="password" {...input} />
+                      <Input id="password" type="password" {...input} 
+/>
+                      
 
                       {/* <Icon id="passwordToggle" className={classNames(classes.icon, `${this.state.toggleIcon}`)} onClick={()=>this.handlePasswordToggle()} /> */}
 
-                      <Input
+                      {/* <Input
                         id="passwordToggle"
                         type="checkbox"
                         onClick={() => this.handlePasswordToggle()}
-                      />
+
+                      /> */}
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
                     </div>
                   )}
                 </Field>

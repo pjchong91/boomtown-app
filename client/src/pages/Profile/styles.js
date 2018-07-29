@@ -9,8 +9,10 @@ const styles = theme => ({
         height:'auto',
         flexDirection:'column',
         flexWrap:'nowrap',
-        padding: '0px'
-
+        padding: '0px',
+        [theme.breakpoints.up('sm')]:{
+            padding: theme.spacing.unit*8,
+        }
     },
     itemTitle:{
         color: 'blue',
@@ -25,7 +27,7 @@ const styles = theme => ({
     },
     gridItem:{
         margin:'16px'
-    },
+    }
 
 })
 

@@ -22,6 +22,7 @@ class AccountForm extends Component {
     super(props)
     this.state = {
       formToggle: true,
+      disabled: true
       // toggleIcon: 'far fa-eye'
     }
   }
@@ -41,7 +42,7 @@ class AccountForm extends Component {
     }
   }
 
-  validate(values) {
+  validate = values => {
     const errors = {}
     if (!values.email) {
       errors.email = 'Required'
@@ -49,24 +50,13 @@ class AccountForm extends Component {
     if (!values.password) {
       errors.password = 'Required'
     }
-    // if (!this.state.formToggle) {
-    //   // checks if signing up a new user
-    //   if (!values.fullname) {
-    //     errors.fullname = 'Please enter your name'
-    //   }
-    // }
-    // if (this.state.formToggle===false && !values.fullname){
-    //   errors.fullname = 'Required'
-    // }
-    // if (!this.state.formToggle ) {
-    //   if (!values.fullname){
-    //     errors.password = 'Required'
-    //   }
+    if(!this.state.formToggle && !values.fullname){
+      errors.fullname = 'Required'
+    }
    
     // }
     return (
-      errors,
-      console.log(errors)
+      errors
     )
   }
 
@@ -150,7 +140,7 @@ class AccountForm extends Component {
                     size="large"
                     color="secondary"
                     disabled={
-                      pristine || invalid
+                     pristine || invalid
                       // @TODO: This prop should depend on pristine or valid state of form
                     }
                   >

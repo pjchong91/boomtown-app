@@ -1,17 +1,27 @@
 const styles = theme => ({
     root: {
       ...theme.mixins.gutters(),
-      paddingTop: theme.spacing.unit * 2,
-      paddingBottom: theme.spacing.unit * 2,
+      padding:'50px',
+      minHeight:'250px',
+      margin:'16px'
+    //   overflow:'visible',
+    //   height: '450px'
     },
     userDetails:{
         display:'flex',
         flexDirection:'row',
-        alignItems: 'center'
+        alignItems: 'center',
+    },
+    itemDetails:{
+        padding:'0px 16px'
     },
     avatar:{
         borderRadius:'50px',
-        margin:'20px'
+        // margin:'20px'
+    },
+    profileText:{
+        fontSize: '16px',
+        lineHeight: 1.8
     }
   });
 

@@ -21,8 +21,9 @@ const initialState = {
     'https://dummyimage.com/350x250/c4c4c4/212121&text=Please+select+an+image',
   created: new Date(),
   itemowner: {
-    fullname:'pemular'
-  }
+    fullname:'',
+    email:''
+  },
 }
 
 export default (state = initialState, action) => {

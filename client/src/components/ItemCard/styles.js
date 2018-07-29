@@ -19,6 +19,9 @@ const styles = theme => ({
       },
       tagsText:{
           color: 'rgba(0, 0, 0, 0.54)'
+      },
+      avatar:{
+          borderRadius: '50px'
       }
 })
 

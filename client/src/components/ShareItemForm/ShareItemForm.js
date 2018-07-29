@@ -24,6 +24,8 @@ import TextField from './TextField/TextField'
 
 import { withStyles } from '@material-ui/core/styles'
 import styles from './styles'
+import { ViewerContext } from '../../context/ViewerProvider'
+
 
 class ShareForm extends Component {
   constructor(props) {
@@ -35,7 +37,7 @@ class ShareForm extends Component {
       tagsPristine: true,
       enabledByTag: false,
       enabledByImage: false,
-      enabledByText: false,
+      enabledByText: false
     }
     this.fileRef = React.createRef()
   }
@@ -44,40 +46,37 @@ class ShareForm extends Component {
     const errors = {}
     if (!values.title) {
       errors.title = 'Required'
-      this.setState({enabledByText: false})
+      this.setState({ enabledByText: false })
     }
     if (!values.description) {
       errors.description = 'Required'
-      this.setState({enabledByText: false})
+      this.setState({ enabledByText: false })
+    }
+    if (values.description && values.title) {
+      this.setState({ enabledByText: true })
+    }
 
-    }
-    if(values.description && values.title){
-      this.setState({enabledByText: true})
-    }
-    
     return errors
   }
 
   //Check has the tags menu been touched?  And if so, have tags been selected?  If not, throw an error
-  validateTags (){
-    if (!this.state.tagsPristine && this.state.selectedTags.length === 0){
-      this.setState({tagError:true})
-      this.setState({enabledByTag: false})
+  validateTags() {
+    if (!this.state.tagsPristine && this.state.selectedTags.length === 0) {
+      this.setState({ tagError: true })
+      this.setState({ enabledByTag: false })
       console.log('I HAVE AN ERROR')
     } else {
-      this.setState({tagError: false})
-      this.setState({enabledByTag: true})
+      this.setState({ tagError: false })
+      this.setState({ enabledByTag: true })
       console.log('NO ERRORS')
-
     }
   }
 
   //If people try to submit when the page is loaded & tags are not yet showing error for no tags selected
   //TODO: Delete this if button not enabled until fields complete
-  validateTagsSubmit(){
-    if (this.state.selectedTags.length ===0){
-      this.setState({tagError:true})
-      
+  validateTagsSubmit() {
+    if (this.state.selectedTags.length === 0) {
+      this.setState({ tagError: true })
     }
   }
 
@@ -95,7 +94,6 @@ class ShareForm extends Component {
       ...values,
       tags: this.applyTags(tags)
     })
-   
   }
 
   //converts an image to base64 string
@@ -115,11 +113,8 @@ class ShareForm extends Component {
 
   handleImageSelect = e => {
     this.setState({ fileSelected: e.target.files[0] })
-    this.setState({enabledByImage:true})
-   
-
+    this.setState({ enabledByImage: true })
   }
-
 
   applyTags(tags) {
     return (
@@ -134,8 +129,7 @@ class ShareForm extends Component {
     this.setState({
       selectedTags: event.target.value
     })
-    this.validateTags();
-   
+    this.validateTags()
   }
 
   generateTagsText(tags, selected) {
@@ -145,25 +139,20 @@ class ShareForm extends Component {
       .join(', ')
   }
 
-  handleTagsPristine(){
-    this.setState({tagsPristine: false})
+  handleTagsPristine() {
+    this.setState({ tagsPristine: false })
 
-    this.validateTags();
-
+    this.validateTags()
   }
 
-
- 
-
-  async saveItem(values, tags, addItem, resetImage, resetNewItem) {
-
+  async saveItem(values, tags, addItem) {
     const {
       validity,
       files: [file]
     } = this.fileRef.current
 
     if (!validity.valid || !file) return
- 
+
     try {
       const itemData = {
         ...values,
@@ -175,39 +164,37 @@ class ShareForm extends Component {
           image: file
         }
       })
-     
-   
     } catch (e) {
       console.log(e)
     }
   }
 
-  handleShareReset(resetImage,resetNewItem){
-    this.setState({selectedTags:[]})
-    this.setState({fileSelected: false})
+  uploadViewer(viewer,values, updateNewItem){
+    this.props.updateNewItem({
+      ...values,
+      itemowner:{
+        fullname: viewer.fullname,
+        email: viewer.email
+      }
+    })
+  }
+
+  handleShareReset(resetImage, resetNewItem) {
+    this.setState({ selectedTags: [] })
+    this.setState({ fileSelected: false })
     resetImage()
     resetNewItem()
   }
-  // handleResets(){
-
-  //   this.handleCardReset()
-
-  // }
-
-  // handleCardReset(){
-  //   resetImage()
-  //   resetNewItem()
-  // }
-
-
 
   render() {
     const { classes } = this.props
     const { resetImage, updateNewItem, resetNewItem } = this.props
-
     return (
+      <ViewerContext.Consumer>
+    {({viewer}) => (
+    this.uploadViewer(viewer, updateNewItem),
+    console.log(viewer),
       <ItemContainer>
-        {/* PUT addITEM back */}
         {({ addItem, tagData: { tags, loading, error } }) => {
           if (loading) {
             return <p>Content Loading...</p>
@@ -226,9 +213,7 @@ class ShareForm extends Component {
               <Form
                 onSubmit={values => {
                   this.saveItem(values, tags, addItem)
-
                 }}
-               
                 validate={this.validate}
                 render={({
                   handleSubmit,
@@ -239,20 +224,19 @@ class ShareForm extends Component {
                   values,
                   reset
                 }) => (
-                  <form 
-                  onSubmit={event =>{
-                    handleSubmit(event)
-                    form.reset()
-                    this.handleShareReset(resetImage,resetNewItem)
-                    }
-                   
-                  } id="shareItemForm">
+                  <form
+                    onSubmit={event => {
+                      handleSubmit(event)
+                      form.reset()
+                      this.handleShareReset(resetImage, resetNewItem)
+                    }}
+                    id="shareItemForm"
+                  >
                     <FormSpy
                       subscription={{ values: true }}
                       component={({ values }) => {
                         if (values) {
                           this.dispatchUpdate(values, tags, updateNewItem)
-                          
                         }
                         return ''
                       }}
@@ -268,7 +252,9 @@ class ShareForm extends Component {
                             }}
                           >
                             <Typography className={classes.imageSelectText}>
-                              {!this.state.fileSelected ? 'Select an Image' : 'Reset Image'}
+                              {!this.state.fileSelected
+                                ? 'Select an Image'
+                                : 'Reset Image'}
                             </Typography>
                           </Button>
                           <input
@@ -283,8 +269,6 @@ class ShareForm extends Component {
                         </Fragment>
                       )}
                     </Field>
-
-                 
 
                     <div>
                       <Field
@@ -311,7 +295,6 @@ class ShareForm extends Component {
                       />
                     </div>
 
-                
                     <FormControl
                       id="tagSelector"
                       className={classes.tagSelector}
@@ -327,7 +310,7 @@ class ShareForm extends Component {
 
                               <Select
                                 multiple
-                                onClick={()=>this.handleTagsPristine()}
+                                onClick={() => this.handleTagsPristine()}
                                 value={this.state.selectedTags}
                                 onChange={event => this.handleCheckbox(event)}
                                 error={this.state.tagError}
@@ -366,9 +349,14 @@ class ShareForm extends Component {
                       variant="contained"
                       color="primary"
                       className={classes.shareSubmitButton}
-                      disabled={ !(this.state.enabledByText && this.state.enabledByImage && this.state.enabledByTag)}
-                      onClick={()=>this.validateTagsSubmit()}
-                      
+                      disabled={
+                        !(
+                          this.state.enabledByText &&
+                          this.state.enabledByImage &&
+                          this.state.enabledByTag
+                        )
+                      }
+                      onClick={() => this.validateTagsSubmit()}
                     >
                       Share
                     </Button>
@@ -383,6 +371,9 @@ class ShareForm extends Component {
           )
         }}
       </ItemContainer>
+         )}
+  
+         </ViewerContext.Consumer>
     )
   }
 }

@@ -6,6 +6,7 @@ import styles from './styles'
 
 const Share = ({ classes }) => {
   return (
+    
     <div className={classes.root}>
     <div className={classes.shareCard}>
       <ShareCard />

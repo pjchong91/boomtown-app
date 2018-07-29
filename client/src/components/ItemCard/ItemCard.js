@@ -10,6 +10,7 @@ import {
   Avatar,
   CardHeader
 } from '@material-ui/core'
+import Gravatar from 'react-gravatar'
 import moment from 'moment'
 import styles from './styles'
 
@@ -20,9 +21,8 @@ const ItemCard = ({ classes, item }) => (
     <CardMedia className={classes.media} image={item.imageurl}></CardMedia>
     <CardHeader
       avatar={
-        <Avatar aria-label="Recipe" className={classes.avatar}>
-          R
-        </Avatar>
+        <Gravatar className={classes.avatar} email={item.itemowner.email} />
+ 
       }
       title={item.itemowner.fullname}
       subheader={moment(new Date(item.created)).fromNow()}

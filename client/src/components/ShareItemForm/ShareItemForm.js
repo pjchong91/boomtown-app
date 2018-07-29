@@ -64,11 +64,9 @@ class ShareForm extends Component {
     if (!this.state.tagsPristine && this.state.selectedTags.length === 0) {
       this.setState({ tagError: true })
       this.setState({ enabledByTag: false })
-      console.log('I HAVE AN ERROR')
     } else {
       this.setState({ tagError: false })
       this.setState({ enabledByTag: true })
-      console.log('NO ERRORS')
     }
   }
 
@@ -193,7 +191,7 @@ class ShareForm extends Component {
       <ViewerContext.Consumer>
     {({viewer}) => (
     this.uploadViewer(viewer, updateNewItem),
-    console.log(viewer),
+   
       <ItemContainer>
         {({ addItem, tagData: { tags, loading, error } }) => {
           if (loading) {

@@ -101,20 +101,13 @@ module.exports = function(app) {
 
     Item: {
       async itemowner(parent, id, { pgResource }, info) {
-        //NTS: Eventually this query should limit the password column like example below
         try {
           const itemOwner = await pgResource.getUserById(parent.ownerid)
           return itemOwner
         } catch (e) {
           throw new ApolloError(e)
         }
-        // return {
-        //     id: 29,
-        //     fullname: "Mock user",
-        //     email: "mock@user.com",
-        //     bio: "Mock user. Remove me."
-        //   }
-        //   // -------------------------------
+     
       },
       async tags(parent, args, { pgResource }, info) {
         try {
@@ -143,7 +136,6 @@ module.exports = function(app) {
     },
 
     Mutation: {
-      // @TODO: Uncomment this later when we add auth
       ...authMutations(app),
       // -------------------------------
 

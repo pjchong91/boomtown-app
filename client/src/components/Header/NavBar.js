@@ -42,11 +42,12 @@ function ButtonAppBar(props) {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar className={classes.navBar}>
-              <Link to="./items">
+              <Link to="/items">
                   <img src={BoomtownLogo} alt='Boomtown Logo' style={{display:"inline", maxHeight:"50px", margin:"10px"}}/>
               </Link>
+              
            <div className={classes.rightSideNav}>
-            <Link to="./share">
+            <Link to="/share">
             <ShareButton />
             </Link>
             <HamburgerMenu />

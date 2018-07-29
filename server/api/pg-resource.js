@@ -22,7 +22,7 @@ module.exports = function(postgres) {
     async createUser({ fullname, email, password }) {
       const newUserInsert = {
         text:
-          'INSERT INTO users (fullname, email, password) VALUES ($1, $2, $3) RETURNING *', // @TODO: Authentication - Server
+          'INSERT INTO users (fullname, email, password) VALUES ($1, $2, $3) RETURNING *', 
         values: [fullname, email, password]
       }
       try {
@@ -41,7 +41,7 @@ module.exports = function(postgres) {
     },
     async getUserAndPasswordForVerification(email) {
       const findUserQuery = {
-        text: 'SELECT * FROM users WHERE email = $1', // @TODO: Authentication - Server
+        text: 'SELECT * FROM users WHERE email = $1',
         values: [email]
       }
       try {
@@ -77,15 +77,7 @@ module.exports = function(postgres) {
         text: 'SELECT * FROM users WHERE id = $1',
         values: [id]
       }
-
-      /**
-       *  Refactor the following code using the error handling logic described above.
-       *  When you're done here, ensure all of the resource methods in this file
-       *  include a try catch, and throw appropriate errors.
-       *
-       *  Here is an example throw statement: throw 'User was not found.'
-       *  Customize your throw statements so the message can be used by the client.
-       */
+ 
 
       try {
         const user = await postgres.query(findUserQuery)
@@ -99,18 +91,7 @@ module.exports = function(postgres) {
     async getItems(idToOmit) {
       try {
         const items = await postgres.query({
-          /**
-           *  @TODO: Advanced queries
-           *
-           *  Get all Items. If the idToOmit parameter has a value,
-           *  the query should only return Items were the ownerid column
-           *  does not contain the 'idToOmit'
-           *
-           *  Hint: You'll need to use a conditional AND and WHERE clause
-           *  to your query text using string interpolation
-           *
-           * NTS: I have added a borrowerid parameter.  I assumed this filtering feature was for the landing page(?) where you don't want to see your own items or items not available for borrowing
-           */
+         
 
           text: `SELECT item.id, item.title,item.description,item.created, item.ownerid, item.borrowerid, up.data as imageurl 
           FROM items item
@@ -132,7 +113,11 @@ module.exports = function(postgres) {
            *  @TODO: Advanced queries
            *  Get all Items. Hint: You'll need to use a LEFT INNER JOIN among others
            */
-          text: `SELECT * FROM items WHERE ownerid = $1 `,
+          text: `SELECT item.id, item.title,item.description,item.created, item.ownerid, item.borrowerid, up.data as imageurl 
+          FROM items item
+          INNER JOIN uploads up
+          ON up.itemid = item.id
+          WHERE ownerid = $1`,
           values: [id]
         })
         if (!items) throw 'Items not found'
@@ -148,7 +133,11 @@ module.exports = function(postgres) {
            *  @TODO: Advanced queries
            *  Get all Items. Hint: You'll need to use a LEFT INNER JOIN among others
            */
-          text: `SELECT * FROM items WHERE borrowerid = $1`,
+          text: `SELECT item.id, item.title,item.description,item.created, item.ownerid, item.borrowerid, up.data as imageurl 
+          FROM items item
+          INNER JOIN uploads up
+          ON up.itemid = item.id 
+          WHERE borrowerid = $1`,
           values: [id]
         })
         if (!items) throw 'Items not found.'
@@ -233,11 +222,6 @@ module.exports = function(postgres) {
                     RETURNING *`,
                     values: [title, description, user.id]
                 }
-                // Generate new Item query
-                // @TODO
-                // -------------------------------
-
-                // Insert new Item
              
                  const newItem = await client.query(newItemInsert)
                  const itemid = newItem.rows[0].id
@@ -275,9 +259,7 @@ try{
                } catch(e){
                  console.log(e)
                }
-                // Insert tags
-                // @TODO
-                // -------------------------------
+                
 
                 // Commit the entire transaction!
                 client.query('COMMIT', err => {
@@ -286,7 +268,6 @@ try{
                   }
                   // release the client back to the pool
                   done()
-                  // Uncomment this resolve statement when you're ready!
                   resolve(newItem.rows[0])
                   // -------------------------------
                 })

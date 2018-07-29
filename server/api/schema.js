@@ -14,7 +14,7 @@ directive @auth on OBJECT | FIELD_DEFINITION
   type Item @auth {
     id: ID!
     title: String!
-    imageurl: String
+    imageurl: String!
     description: String!
     itemowner: User!
     tags: [Tag]
@@ -79,7 +79,6 @@ directive @auth on OBJECT | FIELD_DEFINITION
   }
 
   type Mutation {
-    # TODO: CONVERT IMAGE BACK TO REQUIRED?? 
      addItem(item: NewItemInput! image: Upload): Item 
     signup(user: SignupInput!): User
     login(user: LoginInput!): Boolean!

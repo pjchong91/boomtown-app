@@ -48,6 +48,14 @@ const styles = theme => ({
     },
     tagInputLabel:{
         width: '100%'
+    },
+    submission:{
+        display: 'flex',
+        flexDirection:'row',
+        alignItems: 'center'
+    },
+    submitMessage:{
+        padding: '10px'
     }
     
 

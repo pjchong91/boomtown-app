@@ -37,13 +37,17 @@ class ShareForm extends Component {
       tagsPristine: true,
       enabledByTag: false,
       enabledByImage: false,
-      enabledByText: false
+      enabledByText: false,
+      submitMessage: false,
     }
     this.fileRef = React.createRef()
   }
 
+  
+
   validate = values => {
     const errors = {}
+    this.setState({submitMessage:false})
     if (!values.title) {
       errors.title = 'Required'
       this.setState({ enabledByText: false })
@@ -72,10 +76,15 @@ class ShareForm extends Component {
 
   //If people try to submit when the page is loaded & tags are not yet showing error for no tags selected
   //TODO: Delete this if button not enabled until fields complete
-  validateTagsSubmit() {
-    if (this.state.selectedTags.length === 0) {
-      this.setState({ tagError: true })
-    }
+  // validateTagsSubmit() {
+  //   if (this.state.selectedTags.length === 0) {
+  //     this.setState({ tagError: true })
+  //   }
+  // }
+
+  handleSubmitMessage(){
+    this.setState({submitMessage:true})
+    
   }
 
   //Updates card according to changes in the form
@@ -130,6 +139,7 @@ class ShareForm extends Component {
     this.validateTags()
   }
 
+
   generateTagsText(tags, selected) {
     return tags
       .map(t => (selected.indexOf(t.id) > -1 ? t.title : false))
@@ -182,6 +192,7 @@ class ShareForm extends Component {
     this.setState({ fileSelected: false })
     resetImage()
     resetNewItem()
+    this.handleSubmitMessage()
   }
 
   render() {
@@ -345,7 +356,7 @@ class ShareForm extends Component {
                         }}
                       </Field>
                     </FormControl>
-
+<div className={classes.submission}>
                     <Button
                       type="submit"
                       variant="contained"
@@ -358,17 +369,25 @@ class ShareForm extends Component {
                           this.state.enabledByTag
                         )
                       }
-                      onClick={() => this.validateTagsSubmit()}
+                      // onClick={() => this.validateTagsSubmit()}
+                      // onClick={() => this.handleSubmitMessage()}
                     >
                       Share
                     </Button>
+
+                    <Typography variant='title' className={classes.submitMessage}>
+               {this.state.submitMessage? 
+               'Thanks for the submission!' : ''}
+                     </Typography>
+</div>
                     {/* </div>
                 )}
               /> */}
                   </form>
                 )}
               />
-              <div id="texthere" />
+              <Typography>
+                </Typography>
             </div>
           )
         }}

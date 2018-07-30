@@ -30,7 +30,7 @@ const userItemsData = ({ id, render }) => (
         query={ALL_USER_ITEMS_QUERY}
         // variables={{ id: id || viewer.id }}
         // variables={{id: userid || viewer.id}}
-        variables={{ id: id }}
+        variables={{ id: id || viewer.id }}
       >
         {({ loading, error, data: { user } = {} }) =>
           render({ loading, error, user })

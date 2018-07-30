@@ -6,14 +6,10 @@ import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
 import React, { Component } from 'react'
 import Typography from '@material-ui/core/Typography'
-/**
- * @TODO: Uncomment the following lines when authentication is added to the form
- */
+
 import { Form, Field } from 'react-final-form'
 
 import AuthContainer from '../../containers/AuthContainer'
-import validate from './helpers/validation'
-import Icon from '@material-ui/core/Icon'
 
 import styles from './styles'
 
@@ -22,25 +18,22 @@ class AccountForm extends Component {
     super(props)
     this.state = {
       formToggle: true,
-      disabled: true
-      // toggleIcon: 'far fa-eye'
+      disabled: true,
+      errorMessage: ''
     }
   }
 
-  handleSubmit = values => {
-    return {...values}
-  }
-
-  handlePasswordToggle() {
-    var x = document.getElementById('password')
-    if (x.type === 'password') {
-      x.type = 'text'
-      // this.setState({toggleIcon:'far fa-eye-slash'})
-    } else {
-      x.type = 'password'
-      // this.setState({toggleIcon:'far fa-eye'})
-    }
-  }
+  //TODO: Password visibility toggle
+  // handlePasswordToggle() {
+  //   var x = document.getElementById('password')
+  //   if (x.type === 'password') {
+  //     x.type = 'text'
+  //     // this.setState({toggleIcon:'far fa-eye-slash'})
+  //   } else {
+  //     x.type = 'password'
+  //     // this.setState({toggleIcon:'far fa-eye'})
+  //   }
+  // }
 
   validate = values => {
     const errors = {}
@@ -50,143 +43,163 @@ class AccountForm extends Component {
     if (!values.password) {
       errors.password = 'Required'
     }
-    if(!this.state.formToggle && !values.fullname){
+    if (!this.state.formToggle && !values.fullname) {
       errors.fullname = 'Required'
     }
-   
-    // }
-    return (
-      errors
-    )
+
+    return errors
   }
 
   render() {
     const { classes } = this.props
-    const required = value => (value ? undefined : "Required");
-
+    const required = value => (value ? undefined : 'Required')
 
     return (
       <AuthContainer>
         {({ signup, login }) => (
-        <Form
-          onSubmit={
-            this.state.formToggle
+          <Form
+            onSubmit={
+              this.state.formToggle
                 ? values => {
-                    login.mutation({
-                      variables: {
-                        user:values
-                      }
-                    })
+                    try {
+                      login.mutation({
+                        variables: {
+                          user: values
+                        }
+                      })
+                      //TODO: Retrieve and display login errors
+                    } catch (e) {
+                      this.setState({ errorMessage: e })
+                    }
+                    setTimeout(() => {
+                      this.setState({
+                        errorMessage: 'Incorrect username or password'
+                      })
+                    }, 2000)
                   }
                 : values => {
-                    signup.mutation({
-                      variables: {
-                        user:values 
-                      }
-                    })
+                    try {
+                      signup.mutation({
+                        variables: {
+                          user: values
+                        }
+                      })
+                      //TODO: Retrieve and display signup errors
+                    } catch (e) {
+                      this.setState({ errorMessage: e })
+                    }
+                    setTimeout(() => {
+                      this.setState({
+                        errorMessage: 'Incorrect username or password'
+                      })
+                    }, 2000)
                   }
-          }
-          validate={this.validate}
-          render={({ handleSubmit, pristine, invalid, values }) => (
-            <form
-              onSubmit={handleSubmit}
-              className={classes.accountForm}
-            >
-              {!this.state.formToggle && (
+            }
+            validate={this.validate}
+            render={({ handleSubmit, pristine, invalid, values }) => (
+              <form onSubmit={handleSubmit} className={classes.accountForm}>
+                {!this.state.formToggle && (
+                  <FormControl fullWidth className={classes.formControl}>
+                    <InputLabel
+                      htmlFor="fullname"
+                      className={classes.loginLabel}
+                    >
+                      Username
+                    </InputLabel>
+                    <Field name="fullname" validate={required}>
+                      {({ input, meta }) => (
+                        <div>
+                          <Input id="fullname" type="text" {...input} />
+                          {meta.error &&
+                            meta.touched && <span>{meta.error}</span>}
+                        </div>
+                      )}
+                    </Field>
+                  </FormControl>
+                )}
                 <FormControl fullWidth className={classes.formControl}>
-                  <InputLabel htmlFor="fullname" className={classes.loginLabel}>Username</InputLabel>
-                  <Field name="fullname" validate={required}>
+                  <InputLabel htmlFor="email" className={classes.loginLabel}>
+                    Email
+                  </InputLabel>
+                  <Field name="email" validate={required}>
                     {({ input, meta }) => (
                       <div>
-                      <Input id="fullname" type="text" {...input} />
-                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                        <Input id="email" type="text" {...input} />
+                        {meta.error &&
+                          meta.touched && <span>{meta.error}</span>}
                       </div>
                     )}
                   </Field>
                 </FormControl>
-              )}
-              <FormControl fullWidth className={classes.formControl}>
-                <InputLabel htmlFor="email" className={classes.loginLabel}>Email</InputLabel>
-                <Field name="email" validate={required}>
-                  {({ input, meta }) => (
-                    <div>
-                    <Input id="email" type="text" {...input} />
-                    {meta.error && meta.touched && <span>{meta.error}</span>}
-                    </div>
-                    
-                  )}
-                  
-                </Field>
-              </FormControl>
-              <FormControl fullWidth className={classes.formControl}>
-                <InputLabel htmlFor="password" className={classes.loginLabel}>Password</InputLabel>
-                <Field name="password" validate={required} >
-                  {({ input, meta }) => (
-                    <div>
-                      <Input id="password" type="password" {...input} 
-/>
-                      
+                <FormControl fullWidth className={classes.formControl}>
+                  <InputLabel htmlFor="password" className={classes.loginLabel}>
+                    Password
+                  </InputLabel>
+                  <Field name="password" validate={required}>
+                    {({ input, meta }) => (
+                      <div>
+                        <Input id="password" type="password" {...input} />
 
-                      {/* <Icon id="passwordToggle" className={classNames(classes.icon, `${this.state.toggleIcon}`)} onClick={()=>this.handlePasswordToggle()} /> */}
+                        {/*TODO: Implement password visibility toggle
+                            <Icon id="passwordToggle" 
+                            className={classNames(classes.icon, `${this.state.toggleIcon}`)} 
+                            onClick={()=>this.handlePasswordToggle()} />
 
-                      {/* <Input
-                        id="passwordToggle"
-                        type="checkbox"
-                        onClick={() => this.handlePasswordToggle()}
+                            <Input
+                              id="passwordToggle"
+                              type="checkbox"
+                              onClick={() => this.handlePasswordToggle()}
+                            /> 
+                         */}
 
-                      /> */}
-                      {meta.error && meta.touched && <span>{meta.error}</span>}
-                    </div>
-                  )}
-                </Field>
-              </FormControl>
-              <FormControl className={classes.formControl}>
-                <Grid
-                  container
-                  direction="row"
-                  justify="space-between"
-                  alignItems="center"
-                >
-                  <Button
-                    type="submit"
-                    className={classes.formButton}
-                    variant="contained"
-                    size="large"
-                    color="secondary"
-                    disabled={
-                     pristine || invalid
-                      // @TODO: This prop should depend on pristine or valid state of form
-                    }
+                        {meta.error &&
+                          meta.touched && <span>{meta.error}</span>}
+                      </div>
+                    )}
+                  </Field>
+                </FormControl>
+                <FormControl className={classes.formControl}>
+                  <Grid
+                    container
+                    direction="row"
+                    justify="space-between"
+                    alignItems="center"
                   >
-                    {this.state.formToggle ? 'Enter' : 'Create Account'}
-                  </Button>
-                  <Typography>
-                    <button
-                      className={classes.formToggle}
-                      type="button"
-                      onClick={() => {
-                       
-                        // @TODO: Reset the form on submit
-                        this.setState({
-                          formToggle: !this.state.formToggle
-                        })
-                        // form.reset()
-                      }}
+                    <Button
+                      type="submit"
+                      className={classes.formButton}
+                      variant="contained"
+                      size="large"
+                      color="secondary"
+                      disabled={pristine || invalid}
                     >
-                      {this.state.formToggle
-                        ? 'Create an account.'
-                        : 'Login to existing account.'}
-                    </button>
-                  </Typography>
-                </Grid>
-              </FormControl>
-              <Typography className={classes.errorMessage}>
-                {/* @TODO: Display sign-up and login errors */}
-                
-              </Typography>
-            </form>
-          )}
-        />
+                      {this.state.formToggle ? 'Enter' : 'Create Account'}
+                    </Button>
+                    <Typography>
+                      <button
+                        className={classes.formToggle}
+                        type="button"
+                        onClick={() => {
+                          // @TODO: Reset the form on submit - Necessary? User moved to items on successful login
+                          this.setState({
+                            formToggle: !this.state.formToggle
+                          })
+                        }}
+                      >
+                        {this.state.formToggle
+                          ? 'Create an account.'
+                          : 'Login to existing account.'}
+                      </button>
+                    </Typography>
+                  </Grid>
+                </FormControl>
+                <Typography className={classes.errorMessage}>
+                  {/* @TODO: Display sign-up and login errors */}
+                  {this.state.errorMessage}
+                </Typography>
+              </form>
+            )}
+          />
         )}
       </AuthContainer>
     )

@@ -4,12 +4,8 @@ import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import { Link } from 'react-router-dom'
-import { createSignalIfSupported } from 'apollo-link-http-common'
-
 import AuthContainer from '../../../containers/AuthContainer'
-
 import { ViewerContext } from '../../../context/ViewerProvider'
-
 
 const ITEM_HEIGHT = 48
 
@@ -52,21 +48,15 @@ class LongMenu extends React.Component {
             }
           }}
         >
-
-         <ViewerContext.Consumer>
-      {({viewer})=>(
-       <Link to={`/profile/${viewer.id}`}>
-       <MenuItem key="Your Profile" onClick={
-         this.handleClose
-        //  console.log(viewer.id)
-      }>
-         Your Profile
-       </MenuItem>
-      </Link>
-      )}
-      
-    </ViewerContext.Consumer>
-         
+          <ViewerContext.Consumer>
+            {({ viewer }) => (
+              <Link to={`/profile/${viewer.id}`}>
+                <MenuItem key="Your Profile" onClick={this.handleClose}>
+                  Your Profile
+                </MenuItem>
+              </Link>
+            )}
+          </ViewerContext.Consumer>
           <AuthContainer>
             {({ logout }) => {
               return (

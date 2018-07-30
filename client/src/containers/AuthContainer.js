@@ -1,7 +1,6 @@
 import { adopt } from 'react-adopt'
 import { Mutation } from 'react-apollo'
 import React from 'react'
-
 import client from '../apollo'
 
 import {
@@ -21,9 +20,6 @@ const signup = ({ render }) => (
     }
   </Mutation>
 )
-/**
- * @TODO: Use Apollo's <Mutation /> component to use the signup mutation.
- */
 
 const login = ({ render }) => (
   <Mutation
@@ -35,9 +31,6 @@ const login = ({ render }) => (
     }
   </Mutation>
 )
-/**
- * @TODO: Use Apollo's <Mutation /> component to use the login mutation.
- */
 
 const logout = ({ render }) => (
   <Mutation mutation={LOGOUT_MUTATION} onCompleted={() => client.resetStore()}>
@@ -46,12 +39,8 @@ const logout = ({ render }) => (
     }
   </Mutation>
 )
-/**
- * @TODO: Use Apollo's <Mutation /> component to use the logout mutation.
- */
 
 const AuthContainer = adopt({
-  // @TODO: Uncomment each line as you write the corresponding query.
   signup,
   login,
   logout

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Redirect, Route, Switch } from 'react-router'
 import Home from './../pages/Home'
 import Items from './../pages/Items'
@@ -6,13 +6,12 @@ import Share from './../pages/Share'
 import Profile from './../pages/Profile'
 import NavBar from './../components/Header'
 import { ViewerContext } from '../context/ViewerProvider'
-//TODO: EVENTUALLY NEED TO IMPORT A LOADER
+import LoadingPage from './../components/LoadingPage'
 
 export default () => (
   <ViewerContext.Consumer>
     {({ loading, viewer, error }) => {
-      if (loading) return 'Loading stuff'
-      // <FullScreenLoader />
+      if (loading) return <LoadingPage />
       if (!viewer) {
         return (
           <Switch>

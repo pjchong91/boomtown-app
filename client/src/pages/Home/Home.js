@@ -2,12 +2,8 @@ import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import React from 'react'
 import Typography from '@material-ui/core/Typography'
-
-import { Redirect } from 'react-router-dom'
-
 import AccountForm from '../../components/AccountForm'
-
-
+import PropTypes from 'prop-types'
 import styles from './styles'
 
 const Home = ({ classes }) => {
@@ -41,7 +37,8 @@ const Home = ({ classes }) => {
   )
 }
 
-
-
+Home.propTypes = {
+  classes: PropTypes.object.isRequired
+}
 
 export default withStyles(styles)(Home)

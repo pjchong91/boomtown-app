@@ -4,7 +4,6 @@ import { createUploadLink } from 'apollo-upload-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { onError } from 'apollo-link-error'
 
-
 const httpWithUploadsLink = createUploadLink({
   includeExtensions: true,
   // @TODO: If `process.env.NODE_ENV !== 'production'`, then use localhost's GraphQL endpoint
@@ -26,11 +25,7 @@ const client = new ApolloClient({
       }
       if (networkError) console.log(`[Network error]: ${networkError}`)
     }),
-    /**
-     * @TODO: Set your httpWithUploads link as the next item in this array.
-     *
-     * Don't forget to add to add a comma after the first array item above!
-     */
+
     httpWithUploadsLink
   ]),
   cache: new InMemoryCache() // Pull data from client-side cache, if available

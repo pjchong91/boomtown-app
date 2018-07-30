@@ -10,7 +10,6 @@ import {
   Checkbox,
   ListItemText,
   FormControl,
-  FormHelperText,
   InputLabel,
   Input
 } from '@material-ui/core'
@@ -24,7 +23,7 @@ import TextField from './TextField/TextField'
 
 import { withStyles } from '@material-ui/core/styles'
 import styles from './styles'
-import { ViewerContext } from '../../context/ViewerProvider'
+import LoadingPage from './../LoadingPage'
 
 class ShareForm extends Component {
   constructor(props) {
@@ -70,14 +69,6 @@ class ShareForm extends Component {
       this.setState({ enabledByTag: true })
     }
   }
-
-  //If people try to submit when the page is loaded & tags are not yet showing error for no tags selected
-  //TODO: Delete this if button not enabled until fields complete
-  // validateTagsSubmit() {
-  //   if (this.state.selectedTags.length === 0) {
-  //     this.setState({ tagError: true })
-  //   }
-  // }
 
   handleSubmitMessage() {
     this.setState({ submitMessage: true })
@@ -194,211 +185,191 @@ class ShareForm extends Component {
     const { classes } = this.props
     const { resetImage, updateNewItem, resetNewItem } = this.props
     return (
-   
-            <ItemContainer>
-              {({ addItem, tagData: { tags, loading, error } }) => {
-                if (loading) {
-                  return <p>Content Loading...</p>
-                }
+      <ItemContainer>
+        {({ addItem, tagData: { tags, loading, error } }) => {
+          if (loading) {
+            return <LoadingPage />
+          }
 
-                if (error) {
-                  return error
-                }
+          if (error) {
+            return error
+          }
 
-                return (
-                  <div className={classes.root}>
-                    <Typography className={classes.header}>
-                      Share. Borrow. Prosper.
-                    </Typography>
+          return (
+            <div className={classes.root}>
+              <Typography className={classes.header}>
+                Share. Borrow. Prosper.
+              </Typography>
 
-                    <Form
-                      onSubmit={values => {
-                        this.saveItem(values, tags, addItem)
+              <Form
+                onSubmit={values => {
+                  this.saveItem(values, tags, addItem)
+                }}
+                validate={this.validate}
+                render={({
+                  handleSubmit,
+                  pristine,
+                  invalid,
+                  form,
+                  submitting,
+                  values,
+                  reset
+                }) => (
+                  <form
+                    onSubmit={event => {
+                      handleSubmit(event)
+                      form.reset()
+                      this.handleShareReset(resetImage, resetNewItem)
+                    }}
+                    id="shareItemForm"
+                  >
+                    <FormSpy
+                      subscription={{ values: true }}
+                      component={({ values }) => {
+                        if (values) {
+                          this.dispatchUpdate(values, tags, updateNewItem)
+                        }
+                        return ''
                       }}
-                      validate={this.validate}
-                      render={({
-                        handleSubmit,
-                        pristine,
-                        invalid,
-                        form,
-                        submitting,
-                        values,
-                        reset
-                      }) => (
-                        <form
-                          onSubmit={event => {
-                            handleSubmit(event)
-                            form.reset()
-                            this.handleShareReset(resetImage, resetNewItem)
-                          }}
-                          id="shareItemForm"
-                        >
-                          <FormSpy
-                            subscription={{ values: true }}
-                            component={({ values }) => {
-                              if (values) {
-                                this.dispatchUpdate(values, tags, updateNewItem)
-                              }
-                              return ''
-                            }}
-                          />
-
-                          <Field name="imageurl">
-                            {(input, meta) => (
-                              <Fragment>
-                                <Button
-                                  className={`${
-                                    !this.state.fileSelected
-                                      ? classes.selectImageButton
-                                      : classes.selectImageButton2
-                                  }`}
-                                  onClick={() => {
-                                    this.fileRef.current.click()
-                                    //TODO: if clicked - and there is an image selected already, clear image from the state and start over
-                                  }}
-                                >
-                                  <Typography
-                                    className={classes.imageSelectText}
-                                  >
-                                    {!this.state.fileSelected
-                                      ? 'Select an Image'
-                                      : 'Reset Image'}
-                                  </Typography>
-                                </Button>
-                                <input
-                                  onChange={e => {
-                                    this.handleImageSelect(e)
-                                  }}
-                                  type="file"
-                                  accept="image/*"
-                                  hidden
-                                  ref={this.fileRef}
-                                />
-                              </Fragment>
-                            )}
-                          </Field>
-
-                          <div>
-                            <Field
-                              name="title"
-                              component={TextField}
-                              type="text"
-                              label="Name Your Item"
-                              className={classes.inputName}
-                              // validate={required}
-                            />
-                          </div>
-
-                          <div>
-                            <Field
-                              name="description"
-                              component={TextField}
-                              type="text"
-                              multiline
-                              rows="4"
-                              label="Describe Your Item"
-                              className={classes.inputDescription}
-
-                              // validate={required}
-                            />
-                          </div>
-
-                          <FormControl
-                            id="tagSelector"
-                            className={classes.tagSelector}
-                            error={this.state.tagError}
-                          >
-                            <Field
-                              name="tags"
-                              prisitine={this.state.tagsPristine}
-                            >
-                              {({ input, meta }) => {
-                                return (
-                                  <div>
-                                    <InputLabel htmlFor="select-multiple-checkbox">
-                                      Tags - Please select at least one
-                                    </InputLabel>
-
-                                    <Select
-                                      multiple
-                                      onClick={() => this.handleTagsPristine()}
-                                      value={this.state.selectedTags}
-                                      onChange={event =>
-                                        this.handleCheckbox(event)
-                                      }
-                                      error={this.state.tagError}
-                                      input={
-                                        <Input
-                                          id="select-multiple-checkbox"
-                                          className={classes.tagInputLabel}
-                                        />
-                                      }
-                                      renderValue={selected => {
-                                        return this.generateTagsText(
-                                          tags,
-                                          selected
-                                        )
-                                      }}
-                                    >
-                                      {tags &&
-                                        tags.map(tag => (
-                                          <MenuItem key={tag.id} value={tag.id}>
-                                            <Checkbox
-                                              checked={
-                                                this.state.selectedTags.indexOf(
-                                                  tag.id
-                                                ) > -1
-                                              }
-                                            />
-                                            <ListItemText primary={tag.title} />
-                                          </MenuItem>
-                                        ))}
-                                    </Select>
-                                  </div>
-                                )
-                              }}
-                            </Field>
-                          </FormControl>
-                          <div className={classes.submission}>
-                            <Button
-                              type="submit"
-                              variant="contained"
-                              color="primary"
-                              className={classes.shareSubmitButton}
-                              disabled={
-                                !(
-                                  this.state.enabledByText &&
-                                  this.state.enabledByImage &&
-                                  this.state.enabledByTag
-                                )
-                              }
-                              // onClick={() => this.validateTagsSubmit()}
-                              // onClick={() => this.handleSubmitMessage()}
-                            >
-                              Share
-                            </Button>
-
-                            <Typography
-                              variant="title"
-                              className={classes.submitMessage}
-                            >
-                              {this.state.submitMessage
-                                ? 'Thanks for the submission!'
-                                : ''}
-                            </Typography>
-                          </div>
-                          {/* </div>
-                )}
-              /> */}
-                        </form>
-                      )}
                     />
-                    <Typography />
-                  </div>
-                )
-              }}
-            </ItemContainer>
 
+                    <Field name="imageurl">
+                      {(input, meta) => (
+                        <Fragment>
+                          <Button
+                            className={`${
+                              !this.state.fileSelected
+                                ? classes.selectImageButton
+                                : classes.selectImageButton2
+                            }`}
+                            onClick={() => {
+                              this.fileRef.current.click()
+                              //TODO: if clicked - and there is an image selected already, clear image from the state and start over
+                            }}
+                          >
+                            <Typography className={classes.imageSelectText}>
+                              {!this.state.fileSelected
+                                ? 'Select an Image'
+                                : 'Reset Image'}
+                            </Typography>
+                          </Button>
+                          <input
+                            onChange={e => {
+                              this.handleImageSelect(e)
+                            }}
+                            type="file"
+                            accept="image/*"
+                            hidden
+                            ref={this.fileRef}
+                          />
+                        </Fragment>
+                      )}
+                    </Field>
+
+                    <div>
+                      <Field
+                        name="title"
+                        component={TextField}
+                        type="text"
+                        label="Name Your Item"
+                        className={classes.inputName}
+                      />
+                    </div>
+
+                    <div>
+                      <Field
+                        name="description"
+                        component={TextField}
+                        type="text"
+                        multiline
+                        rows="4"
+                        label="Describe Your Item"
+                        className={classes.inputDescription}
+                      />
+                    </div>
+
+                    <FormControl
+                      id="tagSelector"
+                      className={classes.tagSelector}
+                      error={this.state.tagError}
+                    >
+                      <Field name="tags" prisitine={this.state.tagsPristine}>
+                        {({ input, meta }) => {
+                          return (
+                            <div>
+                              <InputLabel htmlFor="select-multiple-checkbox">
+                                Tags - Please select at least one
+                              </InputLabel>
+
+                              <Select
+                                multiple
+                                onClick={() => this.handleTagsPristine()}
+                                value={this.state.selectedTags}
+                                onChange={event => this.handleCheckbox(event)}
+                                error={this.state.tagError}
+                                input={
+                                  <Input
+                                    id="select-multiple-checkbox"
+                                    className={classes.tagInputLabel}
+                                  />
+                                }
+                                renderValue={selected => {
+                                  return this.generateTagsText(tags, selected)
+                                }}
+                              >
+                                {tags &&
+                                  tags.map(tag => (
+                                    <MenuItem key={tag.id} value={tag.id}>
+                                      <Checkbox
+                                        checked={
+                                          this.state.selectedTags.indexOf(
+                                            tag.id
+                                          ) > -1
+                                        }
+                                      />
+                                      <ListItemText primary={tag.title} />
+                                    </MenuItem>
+                                  ))}
+                              </Select>
+                            </div>
+                          )
+                        }}
+                      </Field>
+                    </FormControl>
+                    <div className={classes.submission}>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        className={classes.shareSubmitButton}
+                        disabled={
+                          !(
+                            this.state.enabledByText &&
+                            this.state.enabledByImage &&
+                            this.state.enabledByTag
+                          )
+                        }
+                      >
+                        Share
+                      </Button>
+
+                      <Typography
+                        variant="title"
+                        className={classes.submitMessage}
+                      >
+                        {this.state.submitMessage
+                          ? 'Thanks for the submission!'
+                          : ''}
+                      </Typography>
+                    </div>
+                  </form>
+                )}
+              />
+              <Typography />
+            </div>
+          )
+        }}
+      </ItemContainer>
     )
   }
 }

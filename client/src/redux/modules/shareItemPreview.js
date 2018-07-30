@@ -21,9 +21,9 @@ const initialState = {
     'https://dummyimage.com/350x250/c4c4c4/212121&text=Please+select+an+image',
   created: new Date(),
   itemowner: {
-    fullname:'',
-    email:''
-  },
+    fullname: '',
+    email: ''
+  }
 }
 
 export default (state = initialState, action) => {
@@ -39,7 +39,7 @@ export default (state = initialState, action) => {
     }
     case RESET_NEW_ITEM: {
       return {
-          //How come this one doesn't need states???
+        //How come this one doesn't need states???
         ...initialState
       }
     }

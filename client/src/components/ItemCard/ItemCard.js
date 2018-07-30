@@ -7,31 +7,25 @@ import {
   CardActions,
   Typography,
   Button,
-  Avatar,
   CardHeader
 } from '@material-ui/core'
 import Gravatar from 'react-gravatar'
 import moment from 'moment'
 import styles from './styles'
-import { Link } from 'react-router-dom';
-
-
-
+import { Link } from 'react-router-dom'
 
 const ItemCard = ({ classes, item }) => (
   <Card className={classes.card}>
-    <CardMedia className={classes.media} image={item.imageurl}></CardMedia>
+    <CardMedia className={classes.media} image={item.imageurl} />
     <Link to={`/profile/${item.itemowner.id}`}>
-    <CardHeader
-      avatar={
-        <Gravatar className={classes.avatar} email={item.itemowner.email} />
- 
-      }
-      title={item.itemowner.fullname}
-      subheader={moment(new Date(item.created)).fromNow()}
-      className={classes.header}
-      
-    />
+      <CardHeader
+        avatar={
+          <Gravatar className={classes.avatar} email={item.itemowner.email} />
+        }
+        title={item.itemowner.fullname}
+        subheader={moment(new Date(item.created)).fromNow()}
+        className={classes.header}
+      />
     </Link>
     <CardContent className={classes.content}>
       <Typography gutterBottom variant="headline" component="h2">

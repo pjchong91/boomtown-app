@@ -83,6 +83,7 @@ module.exports = function(app) {
         }
       } catch (e) {
         throw new AuthenticationError(e)
+        // throw (e)
       }
     },
 
@@ -117,6 +118,7 @@ module.exports = function(app) {
        return true
       } catch (e) {
         throw new AuthenticationError(e)
+        // throw(e)
       }
     },
 

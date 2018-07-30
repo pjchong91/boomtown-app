@@ -1,34 +1,22 @@
 import { withStyles } from '@material-ui/core/styles'
 import React from 'react'
-
 import styles from './styles'
 import ItemsContainer from '../../containers/ItemsContainer'
 import { Grid, Typography } from '@material-ui/core'
 import ItemCard from './../../components/ItemCard'
-import { ViewerContext } from '../../context/ViewerProvider'
-import { Query, Mutation } from 'react-apollo'
-
+import LoadingPage from './../../components/LoadingPage'
 import AboutUser from './../../components/AboutUser'
+import PropTypes from 'prop-types'
 
-import {
-  ALL_TAGS_QUERY,
-  ALL_ITEMS_QUERY,
-  ADD_ITEM_MUTATION,
-  ALL_USER_ITEMS_QUERY
-} from '../../apollo/queries'
 
-const Profile = ({ classes, match, props }) => {
-  console.log('hello')
+const Profile = ({ classes, match }) => {
   return (
-    // <h1>Hello {match.params.userid}</h1>
     <ItemsContainer id={match.params.userid}>
-    {/* <ItemsContainer id='26'> */}
       {({ userItemsData: { loading, error, user, viewer } }) => {
-        if (loading) return 'Dootdootdoot'
-        console.log(user.items)
+        if (loading) return <LoadingPage />
         return (
           <Grid container className={classes.root}>
-            <AboutUser user={user}  />
+            <AboutUser user={user} />
             <Typography
               variant="display1"
               component="h3"
@@ -36,7 +24,7 @@ const Profile = ({ classes, match, props }) => {
             >
               Shared Items
             </Typography>
-            <Grid container >
+            <Grid container>
               {user.items.map(item => (
                 <Grid
                   item
@@ -55,6 +43,11 @@ const Profile = ({ classes, match, props }) => {
       }}
     </ItemsContainer>
   )
+}
+
+Profile.propTypes = {
+  classes: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired
 }
 
 export default withStyles(styles)(Profile)

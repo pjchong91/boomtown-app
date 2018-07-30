@@ -39,7 +39,6 @@ export default (state = initialState, action) => {
     }
     case RESET_NEW_ITEM: {
       return {
-        //How come this one doesn't need states???
         ...initialState
       }
     }

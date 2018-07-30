@@ -2,7 +2,6 @@ const { AuthenticationError } = require('apollo-server')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-
 function setCookie({ tokenName, token, res }) {
   /**
    *  @TODO: Authentication - Server
@@ -17,19 +16,18 @@ function setCookie({ tokenName, token, res }) {
    *  2) It will only be sent via https (but we'll have to disable this in development using NODE_ENV)
    *  3) A boomtown cookie should oly be valid for 2 hours.
    */
-  // Refactor this method with the correct configuration values.
   res.cookie(tokenName, token, {
-    // @TODO: Supply the correct configuration values for our cookie here
-    httpOnly : true,
-    secure : process.env.NODE_ENV === 'production',
-    maxAge: 1000*60*60*2 //2hr
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 1000 * 60 * 60 * 2 //2hr
   })
-  // -------------------------------
 }
 
 function generateToken(user, secret) {
-  const { id, email, fullname, bio } = user // Omit the password from the token
-  const token = jwt.sign( { id, email, fullname, bio } , secret, {expiresIn: '2h'})
+  const { id, email, fullname, bio } = user
+  const token = jwt.sign({ id, email, fullname, bio }, secret, {
+    expiresIn: '2h'
+  })
 
   /**
    *  @TODO: Authentication - Server
@@ -40,11 +38,7 @@ function generateToken(user, secret) {
    *  The result is a cryptographic hash representing out JSON user
    *  which can be decoded using the app secret to retrieve the stateless session.
    */
-  // Refactor this return statement to return the cryptographic hash (the Token)
   return token
-  
- 
-  // -------------------------------
 }
 
 module.exports = function(app) {
@@ -64,8 +58,6 @@ module.exports = function(app) {
         // @TODO: Use bcrypt to generate a cryptographic hash to conceal the user's password before storing it.
         const hashedPassword = await bcrypt.hash(args.user.password, 10)
 
-        // -------------------------------
-
         const user = await context.pgResource.createUser({
           fullname: args.user.fullname,
           email: args.user.email,
@@ -83,7 +75,6 @@ module.exports = function(app) {
         }
       } catch (e) {
         throw new AuthenticationError(e)
-        // throw (e)
       }
     },
 
@@ -92,21 +83,12 @@ module.exports = function(app) {
         const user = await context.pgResource.getUserAndPasswordForVerification(
           args.user.email
         )
-        /**
-         *  @TODO: Authentication - Server
-         *
-         *  To verify the user has provided the correct password, we'll use the provided password
-         *  they submitted from the login form to decrypt the 'hashed' version stored in out database.
-         */
-        // Use bcrypt to compare the provided password to 'hashed' password stored in your database.
-        // const valid = false
+
         const valid = await bcrypt.compare(
           //Unhashed password first and hashed password second
           args.user.password,
           user.password
-        
-      )
-        // -------------------------------
+        )
         if (!valid || !args.user) throw 'User was not found.'
 
         setCookie({
@@ -115,10 +97,9 @@ module.exports = function(app) {
           res: context.req.res
         })
 
-       return true
+        return true
       } catch (e) {
         throw new AuthenticationError(e)
-        // throw(e)
       }
     },
 

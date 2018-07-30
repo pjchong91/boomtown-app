@@ -1,10 +1,7 @@
 const styles = theme => ({
   formControl: {
     marginBottom: theme.spacing.unit * 2,
-    width: '100%',
-    // position: 'relative'
-    // transform: 'translateY(0, 13px)'
-
+    width: '100%'
   },
   formButton: {
     marginTop: theme.spacing.unit * 2
@@ -26,10 +23,9 @@ const styles = theme => ({
   errorMessage: {
     color: 'firebrick'
   },
-  loginLabel:{
-    position:'relative'
+  loginLabel: {
+    position: 'relative'
   }
-
 })
 
 export default styles

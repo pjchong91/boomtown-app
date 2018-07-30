@@ -8,7 +8,6 @@ import LoadingPage from './../../components/LoadingPage'
 import AboutUser from './../../components/AboutUser'
 import PropTypes from 'prop-types'
 
-
 const Profile = ({ classes, match }) => {
   return (
     <ItemsContainer id={match.params.userid}>

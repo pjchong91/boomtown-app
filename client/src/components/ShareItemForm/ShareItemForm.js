@@ -24,6 +24,7 @@ import TextField from './TextField/TextField'
 import { withStyles } from '@material-ui/core/styles'
 import styles from './styles'
 import LoadingPage from './../LoadingPage'
+import PropTypes from 'prop-types'
 
 class ShareForm extends Component {
   constructor(props) {
@@ -386,6 +387,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(resetImage())
   }
 })
+
+ShareForm.propTypes = {
+  classes: PropTypes.object.isRequired
+}
 
 export default connect(
   undefined,

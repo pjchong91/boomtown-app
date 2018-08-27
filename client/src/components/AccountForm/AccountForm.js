@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography'
 import { Form, Field } from 'react-final-form'
 import AuthContainer from '../../containers/AuthContainer'
 import styles from './styles'
+import PropTypes from 'prop-types'
 
 class AccountForm extends Component {
   constructor(props) {
@@ -197,6 +198,10 @@ class AccountForm extends Component {
       </AuthContainer>
     )
   }
+}
+
+AccountForm.propTypes = {
+  classes: PropTypes.object.isRequired
 }
 
 export default withStyles(styles)(AccountForm)

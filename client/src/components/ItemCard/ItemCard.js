@@ -13,6 +13,7 @@ import Gravatar from 'react-gravatar'
 import moment from 'moment'
 import styles from './styles'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 const ItemCard = ({ classes, item }) => (
   <Card className={classes.card}>
@@ -46,4 +47,20 @@ const ItemCard = ({ classes, item }) => (
   </Card>
 )
 
+ItemCard.propTypes = {
+  classes: PropTypes.object.isRequired,
+  item: PropTypes.shape({
+    imageurl: PropTypes.string.isRequired,
+    itemowner: PropTypes.shape({
+      email: PropTypes.string.isRequired,
+      fullname: PropTypes.string.isRequired
+    }),
+    tags: PropTypes.arrayOf(
+      PropTypes.shape({
+        title: PropTypes.string.isRequired
+      })
+    ),
+    description: PropTypes.string.isRequired
+  })
+}
 export default withStyles(styles)(ItemCard)

@@ -188,7 +188,6 @@ class AccountForm extends Component {
                     {signup.error
                       ? 'User Creation Error: Incorrect username or password'
                       : ''}
-                    {this.state.errorMessage}
                   </Typography>
                 </form>
               )}

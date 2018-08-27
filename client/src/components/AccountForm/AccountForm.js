@@ -53,91 +53,81 @@ class AccountForm extends Component {
 
     return (
       <AuthContainer>
-        {({ signup, login }) => (
-          <Form
-            onSubmit={
-              this.state.formToggle
-                ? values => {
-                    try {
-                      login.mutation({
+        {({ signup, login, data, loading, error }) => {
+          // if (error) {
+          //   return 'wotfok'
+          // }
+          return (
+            <Form
+              onSubmit={
+                this.state.formToggle
+                  ? values => {
+                      return login.mutation({
                         variables: {
                           user: values
                         }
                       })
+
                       //TODO: Retrieve and display login errors
-                    } catch (e) {
-                      this.setState({ errorMessage: e })
                     }
-                    setTimeout(() => {
-                      this.setState({
-                        errorMessage: 'Incorrect username or password'
-                      })
-                    }, 2000)
-                  }
-                : values => {
-                    try {
+                  : values => {
                       signup.mutation({
                         variables: {
                           user: values
                         }
                       })
                       //TODO: Retrieve and display signup errors
-                    } catch (e) {
-                      this.setState({ errorMessage: e })
                     }
-                    setTimeout(() => {
-                      this.setState({
-                        errorMessage: 'Incorrect username or password'
-                      })
-                    }, 2000)
-                  }
-            }
-            validate={this.validate}
-            render={({ handleSubmit, pristine, invalid, values }) => (
-              <form onSubmit={handleSubmit} className={classes.accountForm}>
-                {!this.state.formToggle && (
+              }
+              validate={this.validate}
+              render={({ handleSubmit, pristine, invalid, values }) => (
+                <form onSubmit={handleSubmit} className={classes.accountForm}>
+                  {!this.state.formToggle && (
+                    <FormControl fullWidth className={classes.formControl}>
+                      <InputLabel
+                        htmlFor="fullname"
+                        className={classes.loginLabel}
+                      >
+                        Username
+                      </InputLabel>
+                      <Field name="fullname" validate={required}>
+                        {({ input, meta }) => (
+                          <div>
+                            <Input id="fullname" type="text" {...input} />
+                            {meta.error &&
+                              meta.touched && <span>{meta.error}</span>}
+                          </div>
+                        )}
+                      </Field>
+                    </FormControl>
+                  )}
                   <FormControl fullWidth className={classes.formControl}>
-                    <InputLabel
-                      htmlFor="fullname"
-                      className={classes.loginLabel}
-                    >
-                      Username
+                    <InputLabel htmlFor="email" className={classes.loginLabel}>
+                      Email
                     </InputLabel>
-                    <Field name="fullname" validate={required}>
+                    <Field name="email" validate={required}>
                       {({ input, meta }) => (
                         <div>
-                          <Input id="fullname" type="text" {...input} />
+                          <Input id="email" type="text" {...input} />
                           {meta.error &&
                             meta.touched && <span>{meta.error}</span>}
                         </div>
                       )}
                     </Field>
                   </FormControl>
-                )}
-                <FormControl fullWidth className={classes.formControl}>
-                  <InputLabel htmlFor="email" className={classes.loginLabel}>
-                    Email
-                  </InputLabel>
-                  <Field name="email" validate={required}>
-                    {({ input, meta }) => (
-                      <div>
-                        <Input id="email" type="text" {...input} />
-                        {meta.error &&
-                          meta.touched && <span>{meta.error}</span>}
-                      </div>
-                    )}
-                  </Field>
-                </FormControl>
-                <FormControl fullWidth className={classes.formControl}>
-                  <InputLabel htmlFor="password" className={classes.loginLabel}>
-                    Password
-                  </InputLabel>
-                  <Field name="password" validate={required}>
-                    {({ input, meta }) => (
-                      <div>
-                        <Input id="password" type="password" {...input} />
+                  <FormControl fullWidth className={classes.formControl}>
+                    <InputLabel
+                      htmlFor="password"
+                      className={classes.loginLabel}
+                    >
+                      Password
+                    </InputLabel>
+                    <Field name="password" validate={required}>
+                      {({ input, meta }) => (
+                        <div>
+                          <Input id="password" type="password" {...input} />
 
-                        {/*TODO: Implement password visibility toggle
+                          {/*TODO: Implement password visibility toggle
                             <Icon id="passwordToggle" 
                             className={classNames(classes.icon, `${this.state.toggleIcon}`)} 
                             onClick={()=>this.handlePasswordToggle()} />
@@ -149,55 +139,62 @@ class AccountForm extends Component {
                             /> 
                          */}
 
-                        {meta.error &&
-                          meta.touched && <span>{meta.error}</span>}
-                      </div>
-                    )}
-                  </Field>
-                </FormControl>
-                <FormControl className={classes.formControl}>
-                  <Grid
-                    container
-                    direction="row"
-                    justify="space-between"
-                    alignItems="center"
-                  >
-                    <Button
-                      type="submit"
-                      className={classes.formButton}
-                      variant="contained"
-                      size="large"
-                      color="secondary"
-                      disabled={pristine || invalid}
+                          {meta.error &&
+                            meta.touched && <span>{meta.error}</span>}
+                        </div>
+                      )}
+                    </Field>
+                  </FormControl>
+                  <FormControl className={classes.formControl}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="space-between"
+                      alignItems="center"
                     >
-                      {this.state.formToggle ? 'Enter' : 'Create Account'}
-                    </Button>
-                    <Typography>
-                      <button
-                        className={classes.formToggle}
-                        type="button"
-                        onClick={() => {
-                          // @TODO: Reset the form on submit - Necessary? User moved to items on successful login
-                          this.setState({
-                            formToggle: !this.state.formToggle
-                          })
-                        }}
+                      <Button
+                        type="submit"
+                        className={classes.formButton}
+                        variant="contained"
+                        size="large"
+                        color="secondary"
+                        disabled={pristine || invalid}
                       >
-                        {this.state.formToggle
-                          ? 'Create an account.'
-                          : 'Login to existing account.'}
-                      </button>
-                    </Typography>
-                  </Grid>
-                </FormControl>
-                <Typography className={classes.errorMessage}>
-                  {/* @TODO: Display sign-up and login errors */}
-                  {this.state.errorMessage}
-                </Typography>
-              </form>
-            )}
-          />
-        )}
+                        {this.state.formToggle ? 'Enter' : 'Create Account'}
+                      </Button>
+                      <Typography>
+                        <button
+                          className={classes.formToggle}
+                          type="button"
+                          onClick={() => {
+                            // @TODO: Reset the form on submit - Necessary? User moved to items on successful login
+                            this.setState({
+                              formToggle: !this.state.formToggle
+                            })
+                          }}
+                        >
+                          {this.state.formToggle
+                            ? 'Create an account.'
+                            : 'Login to existing account.'}
+                        </button>
+                      </Typography>
+                    </Grid>
+                  </FormControl>
+                  <Typography className={classes.errorMessage}>
+                    {/* @TODO: Display sign-up and login errors */}
+                    {login.error
+                      ? 'User Authentication Error: Incorrect username or password'
+                      : ''}
+                    {signup.error
+                      ? 'User Creation Error: Incorrect username or password'
+                      : ''}
+                    {this.state.errorMessage}
+                  </Typography>
+                </form>
+              )}
+            />
+          )
+        }}
       </AuthContainer>
     )
   }

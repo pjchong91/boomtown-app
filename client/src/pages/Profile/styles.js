@@ -6,7 +6,7 @@ const styles = theme => ({
   root: {
     backgroundColor: theme.palette.secondary.main,
 
-    height: 'auto',
+    minHeight: '100%',
     flexDirection: 'column',
     flexWrap: 'nowrap',
     padding: '0px',

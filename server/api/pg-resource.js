@@ -22,7 +22,7 @@ module.exports = function(postgres) {
     async createUser({ fullname, email, password }) {
       const newUserInsert = {
         text:
-          'INSERT INTO users (fullname, email, password) VALUES ($1, $2, $3) RETURNING *', 
+          'INSERT INTO users (fullname, email, password) VALUES ($1, $2, $3) RETURNING *',
         values: [fullname, email, password]
       }
       try {
@@ -77,7 +77,6 @@ module.exports = function(postgres) {
         text: 'SELECT * FROM users WHERE id = $1',
         values: [id]
       }
- 
 
       try {
         const user = await postgres.query(findUserQuery)
@@ -91,8 +90,6 @@ module.exports = function(postgres) {
     async getItems(idToOmit) {
       try {
         const items = await postgres.query({
-         
-
           text: `SELECT item.id, item.title,item.description,item.created, item.ownerid, item.borrowerid, up.data as imageurl 
           FROM items item
           INNER JOIN uploads up
@@ -220,12 +217,12 @@ module.exports = function(postgres) {
                   text: `
                     INSERT INTO items (title,description, ownerid) VALUES ($1, $2, $3)
                     RETURNING *`,
-                    values: [title, description, user.id]
+                  values: [title, description, user.id]
                 }
-             
-                 const newItem = await client.query(newItemInsert)
-                 const itemid = newItem.rows[0].id
-              
+
+                const newItem = await client.query(newItemInsert)
+                const itemid = newItem.rows[0].id
+
                 // -------------------------------
 
                 const imageUploadQuery = {
@@ -239,27 +236,30 @@ module.exports = function(postgres) {
                     base64Str
                   ]
                 }
-try{
-                // Upload image
-                await client.query(imageUploadQuery)
-              } catch(e){
-                console.log(e)
-              }
-              
+                try {
+                  // Upload image
+                  await client.query(imageUploadQuery)
+                } catch (e) {
+                  console.log(e)
+                }
+
                 // Generate tag relationships query (use the'tagsQueryString' helper function provided)
                 // @TODO
                 // -------------------------------
-                const tagsQuery={
-                  text:`
-                    INSERT INTO itemtags(tagid, itemid) VALUES ${tagsQueryString([...tags], itemid, '')}`,
-                  values: tags.map(tag=>tag.id)
+                const tagsQuery = {
+                  text: `
+                    INSERT INTO itemtags(tagid, itemid) VALUES ${tagsQueryString(
+                      [...tags],
+                      itemid,
+                      ''
+                    )}`,
+                  values: tags.map(tag => tag.id)
                 }
-try{
-                await client.query(tagsQuery)
-               } catch(e){
-                 console.log(e)
-               }
-                
+                try {
+                  await client.query(tagsQuery)
+                } catch (e) {
+                  console.log(e)
+                }
 
                 // Commit the entire transaction!
                 client.query('COMMIT', err => {
